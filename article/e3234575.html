@@ -439,7 +439,7 @@ daovoice('update');
         repo: 'blog_comment',
         owner: 'guaxichi',
         admin: 'guaxichi',
-        id: md5md5(location.pathname),
+        id: md5(location.pathname),
         labels: 'Gitalk'.split(',').filter(l => l),
         perPage: 10,
         pagerDirection: 'last',
@@ -448,6 +448,7 @@ daovoice('update');
       })
       gitalk.render('gitalk-container')
 </script>
+
 
             </div>
             <footer id="footer" class="footer">
