@@ -250,6 +250,7 @@ daovoice('update');
 
 <meta name="generator" content="Hexo 6.3.0"></head>
 
+
 <body>
     <script>
         // this function is used to check current theme before page loaded.
@@ -268,27 +269,6 @@ daovoice('update');
             }
         })();
     </script>
-
-     <!--评论显示区，请插入合适的位置-->
-     <div class="comment"></div>
-
-     <!--载入js，在</body>之前插入即可-->
-     <!--Leancloud 操作库:-->
-     <script src="//cdn1.lncld.net/static/js/3.0.4/av-min.js"></script>
-     <!--Valine 的核心代码库-->
-     <script src="你托管的Valine路径./dist/Valine.min.js"></script>
-     <script>
-        new Valine({
-            // AV 对象来自上面引入av-min.js(老司机们不要开车➳♡゛扎心了老铁)
-            av: AV, 
-            el: '.comment',
-            emoticon_url: 'https://cloud.panjunwen.com/alu',
-      emoticon_list: ["狂汗.png","不说话.png","汗.png","坐等.png","献花.png","不高兴.png","中刀.png","害羞.png","皱眉.png","小眼睛.png","暗地观察.png"],
-      app_id: '你的id',
-      app_key: '你的key',
-      placeholder: 'Write a Comment'
-        });
-     </script>
 
     <div class="wrapper">
         <header>
@@ -495,7 +475,7 @@ daovoice('update');
                 <a href="javascript:window.history.back();">back</a>
                 <span>· </span>
                 <a href="/">home</a>
-            </div>
+            </div>            
         </section>
         <section class="post-nav">
             
@@ -507,6 +487,28 @@ daovoice('update');
 </div>
 
 
+
+    <div id="gitalk-container"></div>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.css">
+<script src="https://cdn.jsdelivr.net/npm/gitalk@1.8.0/dist/gitalk.min.js"></script>
+<script src="//cdn.bootcss.com/blueimp-md5/2.10.0/js/md5.js"></script>
+<div id="gitalk-container"></div>
+<script type="text/javascript">
+      var gitalk = new Gitalk({
+        clientID: '899aa35c1f17dd78a337',
+        clientSecret: '6ea37c169e785cf15e1661a8cd3b54d37df9c1a6',
+        repo: 'blog_comment',
+        owner: 'guaxichi',
+        admin: 'guaxichi',
+        id: location.pathname,
+        labels: 'Gitalk'.split(',').filter(l => l),
+        perPage: 10,
+        pagerDirection: 'last',
+        createIssueManually: true,
+        distractionFreeMode: false
+      })
+      gitalk.render('gitalk-container')
+</script>
 
 
             </div>
