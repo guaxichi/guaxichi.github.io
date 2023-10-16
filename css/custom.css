@@ -2,3 +2,9 @@
   max-width: 760px;
   margin: auto;
 }
+.gallery-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
+}
