@@ -583,6 +583,10 @@ a:hover {
   text-decoration: none;
   transition: color 0.2s ease, border-color 0.2s ease, background 0.2s ease, opacity 0.2s ease;
 }
+.gt-container {
+  max-width: 780px;
+  margin: auto;
+}
 .wrapper {
   display: flex;
   flex-direction: column;
@@ -1749,6 +1753,12 @@ header label {
 .gt-container {
   max-width: 760px;
   margin: auto;
+}
+.gallery-list {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  align-items: flex-start;
 }
 @font-face {
   font-family: "iconfont"; /* Project id  */
