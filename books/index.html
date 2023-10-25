@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><!-- hexo injector head_begin start --><style type="text/css">.douban-card-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-height: 400px;
+}
+
+.douban-card {
+    display: flex;
+    margin: 30px 10px;
+    padding: 15px;
+    border-radius: 15px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: antiquewhite;
+    text-decoration: none;
+}
+
+.douban-card:hover {
+    text-decoration: none;
+}
+
+.douban-card-bgimg {
+    position: absolute;
+    width: 115%;
+    height: 115%;
+    filter: blur(15px) brightness(0.6);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.douban-card-img {
+    position: relative;
+    height: 130px;
+    width: 80px;
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.douban-card-left:hover .douban-card-img {
+    filter: blur(5px) brightness(0.6);
+    transform: perspective(800px) rotateX(180deg);
+}
+
+.douban-card-left .douban-card-img {
+    transition: all 500ms ease;
+}
+
+.douban-card-left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.douban-card-left .douban-card-status {
+    height: 130px;
+    width: 80px;
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 30%;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+    transition: all 500ms ease;
+}
+
+.douban-card-left:hover .douban-card-status {
+    transform: perspective(800px) rotateX(0deg);
+}
+
+.douban-card-right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+    font-size: 16px;
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1.3;
+    color: antiquewhite;
+}
+
+.douban-card-item {
+    margin-top: 4px;
+}
+</style><!-- hexo injector head_begin end -->
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="果果">
+
+
+
+
+
+<title>读书记录 | 思果椅</title>
+
+
+
+    <link rel="icon" href="/xigua.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    <script src="/js/jquery.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+ <script>(function(i,s,o,g,r,a,m){i["DaoVoiceObject"]=r;i[r]=i[r]||function(){(i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;a.charset="utf-8";m.parentNode.insertBefore(a,m)})(window,document,"script",('https:' == document.location.protocol ? 'https:' : 'http:') + "//widget.daovoice.io/widget/b6dbddb6.js","daovoice")
+ daovoice('init', {
+  app_id: "a373498b"
+});
+daovoice('update');
+ </script>
+
+<!-- 搜索的部分 -->
+
+
+
+    <script>
+    // function searchToggle() {
+    //     const width = $(document.body).width()
+    //     if(width > 479) {
+    //         return;
+    //     }
+    //     const search = $('.search');
+    //     const searchForm = $('.form-search')
+
+    //     if(!search.hasClass("mobile-search")) {
+    //         search.addClass("mobile-search");
+    //     } else {
+    //         search.removeClass("mobile-search");
+    //     } 
+    // }
+
+    function searchToggle() {
+        const width = $(document.body).width()
+        if(width > 479) {
+            return;
+        }
+        const search = $('.search');
+        const searchForm = $('.form-search');
+        const menuToggle = $('.menu-toggle');
+        const title = $('.navbar-header-title ');
+
+        if(!search.hasClass("mobile-search")) {
+            search.addClass("mobile-search");
+            menuToggle.addClass("open-search")
+            title.addClass("mobile-title-hidden")
+        } else {
+            search.removeClass("mobile-search");
+            menuToggle.removeClass("open-search")
+            // title.css({visibility: 'visible'})
+            title.removeClass("mobile-title-hidden")
+        } 
+    }
+
+
+
+    function search(searchInputEl, formEl, flag) {
+        const path = "/" + "search.json"; // 可以在public 下查看这个search.json
+        $(formEl).submit(function(e){
+            e.preventDefault();
+            let target = null
+            if(searchInputEl == null) {
+                const screenWidth = $(document.body).width();
+                target = screenWidth > 479 ? $('#pc-search-input') : $('#mobile-search-input');
+                console.log(target);
+            } else {
+                target = $(searchInputEl)
+            }
+
+            if(!flag && target.val() === '') {
+                return ;
+            }
+
+            $("#u-search").fadeIn(500, function() {
+                $("body > .wrapper").addClass("modal-active");
+
+                $.ajax({
+                    url: path,
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        $input = target.val();
+                        $(".form-input").val($input);
+                        const loadingBar = $('.search-loading-bar') 
+                        loadingBar.css({
+                            width:'100%',
+                            display: 'block'
+                        });
+                    },
+                    success: function( datas ) {
+                        console.log(datas);
+                        const $resultPanel = $(".modal-body")[0];
+                        let str = `<ul class="modal-results">`;
+                        var keywords = $(".form-input").val().trim().toLowerCase().split(/[\s\-]+/);
+                        $resultPanel.innerHTML = "";
+                        let hasResult = false
+                        let text = `<div class="no-result">找不到与关键词相关的内容....</div>`;
+
+                        if ($(".form-input").val().trim().length <= 0) {
+                            // 没有结果
+                            $resultPanel.innerHTML = text;
+                            return;
+                        }
+                        datas.forEach(function (data, index) {
+                            var isMatch = true;
+                            if (!data.title || data.title.trim() === '') {
+                                data.title = "Untitled";
+                            }
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content && data.content.trim().replace(/<[^>]+>/g, "").toLowerCase() || '';
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty contents
+                            if (data_content !== '') {
+                                keywords.forEach(function (keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        hasResult = true
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            } else {
+                                isMatch = false;
+                            }
+                            // show search results
+                            if (isMatch) {
+                                str += `<li class='result-item'><a href='${data_url}' class='result-item-detail'> <span class="title">${data_title}</span>`;
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 200 characters
+                                    var start = first_occur - 40;
+                                    var end = first_occur + 160;
+
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+
+                                    if (start == 0) {
+                                        end = 200;
+                                    }
+
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+
+                                    var match_content = content.substring(start, end);
+
+                                    // highlight all keywords
+                                    keywords.forEach(function (keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, `<em class="search-keyword">${keyword}</em>`);
+                                    });
+
+                                    str += `<span class="content"> ${match_content} ...</span></a>`;
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        if(hasResult) {
+                            $resultPanel.innerHTML = str;
+                        } else {
+                            $resultPanel.innerHTML = text;
+                        }
+
+                    },
+                    complete: function() {
+                        setTimeout(() => {
+                                const loadingBar = $('.search-loading-bar') 
+                                loadingBar.css({
+                                    width:'0%',
+                                    display: 'none'
+                                });
+                        }, 300)
+                    }
+                });
+            })
+
+        });
+    }
+
+    $(document).ready(function() {
+        $('.modal-close').click(function () { 
+            $("#u-search").fadeOut();
+            $("body > .wrapper").removeClass("modal-active")
+        })
+
+        $('.modal-overlay').click(function() {
+            $("#u-search").fadeOut();
+            $("body > .wrapper").removeClass("modal-active")
+        })
+        search(null, ".form-search", false)
+        search("#u-search-modal-form .form-input", ".u-search-modal-form", true)
+    })
+</script>
+
+
+<meta name="generator" content="Hexo 6.3.0"><style>.img-lazyload-container{overflow:hidden;max-width:100%}.img-lazyload-container img{max-width:100%;display:block;height:auto;transition:opacity .5s ease-in-out}.img-lazyload-container img:not([src]){height:0;opacity:0}</style></head>
+
+
+<body>
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "·  🌙"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "·  🌕"
+            }
+        })();
+    </script>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">思果椅</a></div>
+            <div class="menu navbar-right">
+                <!-- 这里表示的是pc端搜索框 -->
+                
+                
+    <div class="search ">
+        <div class="search-btn" onClick="searchToggle()">
+            <img src="/image/search.png" class="search-btn-img" />
+        </div>
+        <form class="form-search">
+            <input class="input" placeholder="点此搜索" autocomplete="off" id="pc-search-input"/>
+        </form>
+    </div>
+
+                
+                    <a class="menu-item" href="/archives">博文</a>
+                
+                    <a class="menu-item" href="/category">类别</a>
+                
+                    <a class="menu-item" href="/tag">标签</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+    <div class="container">
+        <div class="navbar-header">
+            <div>
+                <a href="/">思果椅</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+            </div>
+            <div class="navbar-mobile-right">
+                
+                
+    <div class="search ">
+        <div class="search-btn" onClick="searchToggle()">
+            <img src="/image/search.png" class="search-btn-img" />
+        </div>
+        <form class="form-search">
+            <input class="input" placeholder="点此搜索" autocomplete="off" id="mobile-search-input"/>
+        </form>
+    </div>
+
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; 目录</div>
+            </div>
+
+        </div>
+        <div class="menu" id="mobile-menu">
+            
+            <a class="menu-item" href="/archives">博文</a>
+            
+            <a class="menu-item" href="/category">类别</a>
+            
+            <a class="menu-item" href="/tag">标签</a>
+            
+            <a class="menu-item" href="/about">关于</a>
+            
+        </div>
+    </div>
+</nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    <article class="post-wrap page">
+        
+        <h2 class="post-title">读书记录</h2>
+        
+        <section class="post-content">
+            <blockquote>
+    <p>三年看一本，可谓细嚼慢咽</p>
+</blockquote>
+
+<style>
+    
+.hexo-douban-tabs {
+    margin-bottom: 15px;
+    margin-top: 15px;
+}
+
+.hexo-douban-tab {
+    padding: 5px;
+    text-decoration: none !important;
+}
+
+.hexo-douban-tab-active {
+    background: #657b83;
+    color: #fff !important;
+}
+
+.hexo-douban-item {
+    position: relative;
+    clear: both;
+    min-height: 170px;
+    padding: 10px 0;
+    border-bottom: 1px #ddd solid;
+}
+
+@media screen and (max-width: 600px) {
+    .hexo-douban-item {
+        width: 100%;
+    }
+}
+
+.hexo-douban-picture {
+    position: absolute;
+    left: 0;
+    top: 10px;
+    width: 100px;
+}
+
+.hexo-douban-info {
+    padding-left: 120px;
+}
+
+.hexo-douban-meta {
+    overflow: hidden;
+    display: -webkit-box;
+    font-size: 12px;
+    line-height: 16px;
+    padding-right: 10px;
+    margin-top: 5px;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 4
+}
+
+.hexo-douban-rating {
+    overflow: hidden;
+    display: -webkit-box;
+    font-size: 12px;
+    padding-right: 10px;
+    margin-top: 8px;
+}
+
+.hexo-douban-comment {
+    font-size: 12px;
+}
+
+.hexo-douban-pagination {
+    margin-top: 15px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+.hexo-douban-button {
+    padding: 5px;
+    text-decoration: none !important;
+}
+
+.hexo-douban-button:hover {
+    background: #657b83;
+    color: #fff !important;
+    opacity: 1;
+}
+</style>
+
+<div class="hexo-douban-tabs">
+    <a class="hexo-douban-tab hexo-douban-tab-do" href="javascript:;"
+       rel="external">
+        Reading
+        (0)</a>
+    <a class="hexo-douban-tab hexo-douban-tab-wish" href="javascript:;"
+       rel="external">
+        Wish
+        (129)</a>
+    <a class="hexo-douban-tab hexo-douban-tab-collect" href="javascript:;"
+       rel="external">
+        Read
+        (45)</a>
+</div>
+<div class="hexo-douban-items">
+</div>
+
+<div class="hexo-douban-pagination">
+    <a class="hexo-douban-button hexo-douban-firstpage" href="javascript:;"> Top</a>
+    <a class="hexo-douban-button hexo-douban-previouspage" href="javascript:;">Prev</a>
+    <span class="hexo-douban-pagenum">1 / 1</span>
+    <a class="hexo-douban-button hexo-douban-nextpage" href="javascript:;">Next</a>
+    <a class="hexo-douban-button hexo-douban-lastpage" href="javascript:;">End</a>
+</div>
+
+<script>
+    (function () {
+        let data = {
+            wish: [{"title":"焦點影人：鄭保瑞","alt":"https://book.douban.com/subject/36351970/","image":"https://minio.mythsman.com/douban/632345b2e0ca81aafb72e6509ff9fb73.jpg","meta":"香港國際電影節協會","rating":"2023-08-01","comment":""},{"title":"ナキメサマ","alt":"https://book.douban.com/subject/35240363/","image":"https://minio.mythsman.com/douban/3de1bd263427a765003b1e7bb2fb6d23.jpg","meta":"[日] 阿泉来堂 / KADOKAWA","rating":"2023-07-08","comment":""},{"title":"早期中国的鬼","alt":"https://book.douban.com/subject/36356273/","image":"https://minio.mythsman.com/douban/75104335258f81d46e8e4ed65ec30473.jpg","meta":"蒲慕州 / 黄咨玄 / 新星出版社","rating":"2023-05-20","comment":""},{"title":"发展的循环：生命中的七个季节","alt":"https://book.douban.com/subject/35608125/","image":"https://minio.mythsman.com/douban/663f467c58607012322e868587f65c6f.jpg","meta":"[美]帕梅拉·莱文（Pamela Levin） / 田宝 / 王筱璇 / 张思雪 / 机械工业出版社","rating":"2023-05-08","comment":""},{"title":"九故事","alt":"https://book.douban.com/subject/26905155/","image":"https://minio.mythsman.com/douban/f2d25e81fbb33993f9f3e48ada740acf.jpg","meta":"[美] J. D. 塞林格 / 丁骏 / 译林出版社","rating":"2023-04-12","comment":""},{"title":"游隼","alt":"https://book.douban.com/subject/36175314/","image":"https://minio.mythsman.com/douban/372438eed50ab0afaa54cf6cf6681e02.jpg","meta":"[英]J.A.贝克 / 李斯本 / 北京日报出版社","rating":"2023-04-11","comment":""},{"title":"A致X","alt":"https://book.douban.com/subject/27116030/","image":"https://minio.mythsman.com/douban/2d6aa5a8f333f7b921319284fa610275.jpg","meta":"(英) 约翰·伯格 / 吴莉君 / 台海出版社 / 理想国","rating":"2023-04-10","comment":""},{"title":"寒栗","alt":"https://book.douban.com/subject/35425635/","image":"https://minio.mythsman.com/douban/8bc9aba878d01825dd6296963d87fef0.jpg","meta":"[丹]索伦·斯外斯特普 / 印思玫 / 北京联合出版公司 / 新华先锋","rating":"2023-04-10","comment":""},{"title":"待宰的羔羊","alt":"https://book.douban.com/subject/35587012/","image":"https://minio.mythsman.com/douban/c7bb4e1c304352ac3d892ca7aa9245de.jpg","meta":"[英]罗尔德·达尔 / 马爱农 / 浙江文艺出版社 / 果麦文化","rating":"2023-04-06","comment":""},{"title":"吃鸟的女孩","alt":"https://book.douban.com/subject/34997248/","image":"https://minio.mythsman.com/douban/fe8ae522cc1ef899aa6c4a9c2463bc95.jpg","meta":"[阿根廷] 萨曼塔·施维伯林 / 姚云青 / 人民文学出版社 / 99读书人","rating":"2023-04-06","comment":""},{"title":"希区柯克与特吕弗对话录","alt":"https://book.douban.com/subject/1968670/","image":"https://minio.mythsman.com/douban/50a1392f693fb98cb0cc62478e44bb39.jpg","meta":"[法] 弗朗索瓦·特吕弗 / 郑克鲁 / 上海人民出版社","rating":"2023-04-06","comment":""},{"title":"雪花写作法","alt":"https://book.douban.com/subject/35931497/","image":"https://minio.mythsman.com/douban/3644551ee58d48db6f45679f6605ff74.jpg","meta":"[美]兰迪·英格曼森 / 中国青年出版社","rating":"2023-04-04","comment":""},{"title":"蛤蟆先生去看心理医生","alt":"https://book.douban.com/subject/35143790/","image":"https://minio.mythsman.com/douban/e0760a72d1ab5c99ec6c23ff4329ee5c.jpg","meta":"[英] 罗伯特·戴博德 / 陈赢 / 天津人民出版社 / 果麦文化","rating":"2023-04-04","comment":""},{"title":"冷血","alt":"https://book.douban.com/subject/20428313/","image":"https://minio.mythsman.com/douban/df288f3a624986a4756f1136b3cf3ac4.jpg","meta":"[美] 杜鲁门·卡波特 / 夏杪 / 南海出版公司 / 新经典文化","rating":"2023-03-30","comment":""},{"title":"当我们不再理解世界","alt":"https://book.douban.com/subject/36073906/","image":"https://minio.mythsman.com/douban/39552559f75099bd28cea4f04eab2e3b.jpg","meta":"[智利]本哈明·拉巴图特 / 施杰 / 人民文学出版社 / 99读书人","rating":"2023-03-29","comment":""},{"title":"牺牲","alt":"https://book.douban.com/subject/5975566/","image":"https://minio.mythsman.com/douban/bb5c65a6d619e3fb518c50882c46dd4e.jpg","meta":"[日] 近藤史惠 / 徐行 / 上海人民出版社","rating":"2023-03-19","comment":""},{"title":"Fun Home","alt":"https://book.douban.com/subject/2458039/","image":"https://minio.mythsman.com/douban/0cca8f3121c2da1255660ddc45ef0e75.jpg","meta":"Alison Bechdel / Mariner Books","rating":"2023-03-11","comment":""},{"title":"未完成的手稿","alt":"https://book.douban.com/subject/36037745/","image":"https://minio.mythsman.com/douban/17a354c2466e5b4095189353d7d2eb2b.jpg","meta":"[法]弗兰克·蒂利耶 / 萨姆斯 / 北京联合出版公司 / 好·奇文化","rating":"2022-11-21","comment":""},{"title":"逃离","alt":"https://book.douban.com/subject/26863797/","image":"https://minio.mythsman.com/douban/ac7e01869048d231154da4094191db77.jpg","meta":"[加] 艾丽丝·门罗 / 李文俊 / 北京十月文艺出版社 / 新经典文化","rating":"2022-11-03","comment":""},{"title":"大胆使用了绿色","alt":"https://book.douban.com/subject/26348835/","image":"https://minio.mythsman.com/douban/4f8419946640f6f474f868c6f7ed2e55.jpg","meta":"谈波 / 回声书店","rating":"2022-10-18","comment":""},{"title":"人鼠之间","alt":"https://book.douban.com/subject/26598807/","image":"https://minio.mythsman.com/douban/5805e9d669f5adb39e1366e6921547c9.jpg","meta":"约翰·斯坦贝克 / 李天奇 / 上海文艺出版社","rating":"2022-10-09","comment":""},{"title":"强风吹拂","alt":"https://book.douban.com/subject/26210487/","image":"https://minio.mythsman.com/douban/ee72666c12f78666b870d13f5dec7a99.jpg","meta":"三浦紫苑 / 林佩瑾 / 李建铨 / 杨正敏 / 广西师范大学出版社 / 理想国","rating":"2022-10-06","comment":""},{"title":"絢爛たる殺人―本格推理マガジン 特集・知られざる探偵たち","alt":"https://book.douban.com/subject/20436696/","image":"https://minio.mythsman.com/douban/d5ac21bf36407512790a201d36329dab.jpg","meta":"鷲尾三郎 / 宮原龍雄 / 坪田宏 / 岡村雄輔 / 山沢晴雄 / 須田刀太郎 / 芦辺拓 / 光文社","rating":"2022-10-06","comment":""},{"title":"纳瑟·阿里先生的最后八天","alt":"https://book.douban.com/subject/27620810/","image":"https://minio.mythsman.com/douban/60b0cfaf4a8cbe2e7aae0208433c0f53.jpg","meta":"[伊朗]玛赞·莎塔碧 / 马爱农 / 文化发展出版社","rating":"2022-10-02","comment":""},{"title":"她只说“是的”","alt":"https://book.douban.com/subject/35785652/","image":"https://minio.mythsman.com/douban/aa14ac360494b598fef030706d1fb142.jpg","meta":"雪莉·杰克逊 / 李文婕 / 中信出版社 / 企鹅兰登中国","rating":"2022-08-30","comment":""},{"title":"透明人潜入密室","alt":"https://book.douban.com/subject/35875586/","image":"https://minio.mythsman.com/douban/f4c8ccd0198e75b8be03276325f98c10.jpg","meta":"阿津川辰海 / 赵婧怡 / 北京联合出版公司","rating":"2022-08-20","comment":""},{"title":"植田正治小传记","alt":"https://book.douban.com/subject/25953928/","image":"https://minio.mythsman.com/douban/a058e0e6db72475186592eaa9013a642.jpg","meta":"植田正治 / 曹逸冰 / 中信出版社","rating":"2022-08-11","comment":""},{"title":"草坪的复仇","alt":"https://book.douban.com/subject/35668915/","image":"https://minio.mythsman.com/douban/7897d006b9344a3895da9a47454f6db9.jpg","meta":"[美国] 理查德·布劳提根 / 潘其扬 / 广西师范大学出版社 / 一頁folio","rating":"2022-07-25","comment":""},{"title":"在西瓜糖里","alt":"https://book.douban.com/subject/35314181/","image":"https://minio.mythsman.com/douban/e3153fe7d30e195dee990d3f6bf99bc1.jpg","meta":"[美] 理查德·布劳提根 / 王伟庆 / 人民文学出版社 / 99读书人","rating":"2022-07-14","comment":""},{"title":"明天也是小春日和","alt":"https://book.douban.com/subject/26733854/","image":"https://minio.mythsman.com/douban/e5642f82cc2ae683af631d9d6c972307.jpg","meta":"[日]津端英子 / 津端修一 / 朝阳 / 新星出版社 / 新经典文化","rating":"2022-04-07","comment":""},{"title":"洞穴奇案","alt":"https://book.douban.com/subject/35183164/","image":"https://minio.mythsman.com/douban/d41d8cd98f00b204e9800998ecf8427e.txt","meta":"[美] 彼得·萨伯 / Peter Suber / 陈福勇 / 张世泰 / 九州出版社 / 后浪","rating":"2022-04-01","comment":""},{"title":"晚安人面瘡","alt":"https://book.douban.com/subject/35218491/","image":"https://minio.mythsman.com/douban/05a63026c79f97062c275d6aec424c12.jpg","meta":"[日] 白井智之 / MIST / 尖端","rating":"2022-03-29","comment":""},{"title":"耶洗别之死","alt":"https://book.douban.com/subject/3666868/","image":"https://minio.mythsman.com/douban/66177b45b6cc845cb5a5ea10bdd73394.jpg","meta":"[英] 克里斯蒂安娜·布兰德 / 张淳 / 吉林出版集团","rating":"2022-03-26","comment":""},{"title":"诗人","alt":"https://book.douban.com/subject/30318654/","image":"https://minio.mythsman.com/douban/3269310b50344c1edc095ac09cf2ade7.jpg","meta":"[美]迈克尔·康奈利 / 简扬 / 北京联合出版公司 / 新经典文化","rating":"2022-03-03","comment":""},{"title":"夺取","alt":"https://book.douban.com/subject/1820014/","image":"https://minio.mythsman.com/douban/f711403822aeeec244eba6e97eed56c4.jpg","meta":"真保裕一 / 姚小燕 / 陈立 / 山东文艺出版社","rating":"2022-03-03","comment":""},{"title":"那些尸体告诉我的事（14岁懂社会系列）","alt":"https://book.douban.com/subject/35063932/","image":"https://minio.mythsman.com/douban/deec11269f7ac2f60275e473ae778a98.jpg","meta":"[日] 上野正彦 / 滕正辉 / 新星出版社 / 读库","rating":"2022-01-22","comment":""},{"title":"消失的13级台阶","alt":"https://book.douban.com/subject/34996429/","image":"https://minio.mythsman.com/douban/3e0d35b194b001cfa1e894ed5b91e2af.jpg","meta":"[日] 高野和明 / 赵建勋 / 上海文艺出版社 / 读客文化","rating":"2021-12-09","comment":""},{"title":"标本师的魔幻剧本","alt":"https://book.douban.com/subject/26881625/","image":"https://minio.mythsman.com/douban/769be8eb68ff7af9fd11bc70dd5bf336.jpg","meta":"[加]扬·马特尔 / 郭国良 / 高淑贤 / 译林出版社","rating":"2021-12-07","comment":""},{"title":"红色骑兵军","alt":"https://book.douban.com/subject/3902733/","image":"https://minio.mythsman.com/douban/bee6e3a7e03623652ff64f5104cece3f.jpg","meta":"[俄罗斯] 伊萨克·巴别尔 / 戴骢 / 浙江文艺出版社","rating":"2021-12-07","comment":""},{"title":"文学的读法","alt":"https://book.douban.com/subject/35597629/","image":"https://minio.mythsman.com/douban/5f6354514400f166d45a6b94f9e279f5.jpg","meta":"[英] 特里·伊格尔顿 / 吴文权 / 海峡文艺出版社 / 后浪 / 后浪文学","rating":"2021-11-10","comment":""},{"title":"飞弹机关宅邸杀人事件","alt":"https://book.douban.com/subject/6029887/","image":"https://minio.mythsman.com/douban/40dd70df645a3b2412e376e6ed44bdfa.jpg","meta":"原案：天樹征丸 / 腳本：金成陽三郎 / 漫畫：佐籐文也 / 内蒙古人民出版社","rating":"2021-10-04","comment":""},{"title":"人物志译注","alt":"https://book.douban.com/subject/30411143/","image":"https://minio.mythsman.com/douban/06cd230f4e2d36ee1ee5031a89518fce.jpg","meta":"[魏] 刘邵 撰 / 伏俊琏 / 上海古籍出版社","rating":"2021-07-20","comment":""},{"title":"自我技术","alt":"https://book.douban.com/subject/26609146/","image":"https://minio.mythsman.com/douban/84de470e524729e0100932e08f44e41d.jpg","meta":"[法] 米歇尔·福柯 / 汪民安 编 / 汪民安 编 / 北京大学出版社 / 培文","rating":"2021-07-05","comment":""},{"title":"海明威与骗子工厂","alt":"https://book.douban.com/subject/30376646/","image":"https://minio.mythsman.com/douban/86e6812702e353d7f6c51a5957a14381.jpg","meta":"[美] 丹·西蒙斯 / 鲁创创 / 上海文艺出版社 / 读客文化","rating":"2021-06-12","comment":""},{"title":"苏门答腊的郁达夫","alt":"https://book.douban.com/subject/1161385/","image":"https://minio.mythsman.com/douban/76af10eb569573289fd0c20f4ebd75cc.jpg","meta":"铃木正夫 / 李振声 / 上海远东出版社","rating":"2021-06-04","comment":""},{"title":"致命系列","alt":"https://book.douban.com/subject/1888404/","image":"https://minio.mythsman.com/douban/1bdd2594e124fb652091c0acbda81838.jpg","meta":"杨恒均 / 開益出版社","rating":"2021-05-27","comment":""},{"title":"知日·铁道","alt":"https://book.douban.com/subject/26738599/","image":"https://minio.mythsman.com/douban/8d1527a15470935ed3a3bd6988c131df.jpg","meta":"苏静主编 / 中信出版社","rating":"2021-05-23","comment":""},{"title":"人物志","alt":"https://book.douban.com/subject/2122295/","image":"https://minio.mythsman.com/douban/81c892a0d635e4963db565799d150dff.jpg","meta":"[魏] 刘劭 著 / [西凉] 刘昞 注 / 杨新平 / 张锴生 注译 / 中州古籍出版社","rating":"2021-05-11","comment":""},{"title":"那时没有王，各人任意而行","alt":"https://book.douban.com/subject/26367370/","image":"https://minio.mythsman.com/douban/e3f0190a35e0f13e041283bdd6977f9b.jpg","meta":"唐诺 / 上海人民出版社 / 世纪文景","rating":"2021-04-08","comment":""},{"title":"编剧的艺术","alt":"https://book.douban.com/subject/34991165/","image":"https://minio.mythsman.com/douban/15345da13eee9348b15d147c5d77e089.jpg","meta":"[匈] 拉约什·埃格里 / 黄隽华 / 海南出版社 / 读客文化","rating":"2021-04-07","comment":""},{"title":"关于那个人的备忘录","alt":"https://book.douban.com/subject/35309262/","image":"https://minio.mythsman.com/douban/5b085f593cda7bc24e900f70865a1a5a.jpg","meta":"[日] 小林泰三 / 赵滢 / 新星出版社","rating":"2021-04-02","comment":""},{"title":"星之继承者","alt":"https://book.douban.com/subject/35271451/","image":"https://minio.mythsman.com/douban/1c172d2053653a95d22ffbf89671e65f.jpg","meta":"[英] 詹姆斯·P.霍根 / [加] 仇春卉 / 新星出版社 / 八光分文化","rating":"2021-04-02","comment":""},{"title":"醉步男","alt":"https://book.douban.com/subject/30359030/","image":"https://minio.mythsman.com/douban/0c4c4ae6a14da59f13a5ae8b1719ec3b.jpg","meta":"[日]小林泰三 / 丁丁虫 / 北京时代华文书局 / 二厂","rating":"2021-04-01","comment":""},{"title":"失明症漫记","alt":"https://book.douban.com/subject/20428302/","image":"https://minio.mythsman.com/douban/7b5c524405915a359510eb0777530196.jpg","meta":"[葡] 若泽·萨拉马戈 / 范维信 / 南海出版公司 / 新经典文化","rating":"2021-03-23","comment":""},{"title":"卡拉马佐夫兄弟","alt":"https://book.douban.com/subject/1856494/","image":"https://minio.mythsman.com/douban/b770a201e0927eac46624d8c021534ad.jpg","meta":"[俄] 费奥多尔·陀思妥耶夫斯基 / 荣如德 / 上海译文出版社","rating":"2021-02-19","comment":""},{"title":"一日重生","alt":"https://book.douban.com/subject/2065564/","image":"https://minio.mythsman.com/douban/db976806e8a2b51f324a7d6138c47982.jpg","meta":"[美] 米奇·阿尔博姆 / 吴正 / 上海译文出版社","rating":"2021-02-19","comment":""},{"title":"分析性写作","alt":"https://book.douban.com/subject/3248706/","image":"https://minio.mythsman.com/douban/a099a0ca96df86a53f73c16a985ff79b.jpg","meta":"罗森瓦塞尔 (David Rosenwasser) / 北京大学出版社","rating":"2021-02-04","comment":""},{"title":"苏东坡新传","alt":"https://book.douban.com/subject/34996404/","image":"https://minio.mythsman.com/douban/dfe1a208be825b855f664da954c64e6b.jpg","meta":"李一冰 / 四川人民出版社 / 后浪","rating":"2021-01-25","comment":""},{"title":"世上最美的溺水者","alt":"https://book.douban.com/subject/26628811/","image":"https://minio.mythsman.com/douban/45c50b07226f4c11824b8d18a7f5f3cb.jpg","meta":"[哥伦比亚] 加西亚·马尔克斯 / 陶玉平 / 南海出版公司 / 新经典文化","rating":"2021-01-21","comment":""},{"title":"猴杯","alt":"https://book.douban.com/subject/35023261/","image":"https://minio.mythsman.com/douban/f39aef9c1047660b95e969312a0ee818.jpg","meta":"张贵兴 / 四川人民出版社 / 后浪 / 后浪文学","rating":"2021-01-20","comment":""},{"title":"九号梦","alt":"https://book.douban.com/subject/24866005/","image":"https://minio.mythsman.com/douban/72f5480333549a73e026339195d9c5e9.jpg","meta":"[英]大卫·米切尔 / 唐江 / 上海文艺出版社","rating":"2021-01-19","comment":""},{"title":"虹の歯ブラシ 上木らいち発散","alt":"https://book.douban.com/subject/26285818/","image":"https://minio.mythsman.com/douban/e1267c35b16348007a632eb9fe2175ce.jpg","meta":"早坂吝 / 講談社","rating":"2021-01-16","comment":""},{"title":"法兰西组曲","alt":"https://book.douban.com/subject/30312369/","image":"https://minio.mythsman.com/douban/440ecf4a08131acef207bfc06032f69f.jpg","meta":"[法]伊莱娜·内米洛夫斯基 / 袁筱一 / 人民文学出版社 / 99读书人","rating":"2021-01-13","comment":""},{"title":"地表最强熊虫","alt":"https://book.douban.com/subject/33395277/","image":"https://minio.mythsman.com/douban/5f7d4e8b78bb90360245b8e77862a382.jpg","meta":"[日] 铃木忠 / 陈朕疆 / 商务印书馆","rating":"2021-01-10","comment":""},{"title":"The Other City","alt":"https://book.douban.com/subject/4476653/","image":"https://minio.mythsman.com/douban/4ed579177f7a7ff2530dbb7feb01741a.jpg","meta":"Michal Ajvaz / Turner, Gerald / Dalkey Archive Pr","rating":"2021-01-08","comment":""},{"title":"The Golden Age","alt":"https://book.douban.com/subject/4766186/","image":"https://minio.mythsman.com/douban/5f49cec280172984de502e443bceb400.jpg","meta":"Michal Ajvaz / Andrew Oakland / Dalkey Archive Press","rating":"2021-01-08","comment":""},{"title":"周恩来旅日日记（上下册）","alt":"https://book.douban.com/subject/1518895/","image":"https://minio.mythsman.com/douban/9537c92deb48d04020ab56ddb29da11d.jpg","meta":"周恩来 / 线装书局","rating":"2021-01-04","comment":""},{"title":"九故事","alt":"https://book.douban.com/subject/2161892/","image":"https://minio.mythsman.com/douban/055d1f20f497fa28072521278b537db4.jpg","meta":"J·D·塞林格 / 李文俊 / 何上峰 / 人民文学出版社 / 99读书人","rating":"2020-12-29","comment":""},{"title":"回归故里","alt":"https://book.douban.com/subject/34942789/","image":"https://minio.mythsman.com/douban/1745b4a298ea8f8dafe1eceb71e16e44.jpg","meta":"[法]迪迪埃·埃里蓬 / 王献 / 上海文化出版社 / 后浪","rating":"2020-12-25","comment":""},{"title":"100天后会死的鳄鱼君","alt":"https://book.douban.com/subject/35224085/","image":"https://minio.mythsman.com/douban/b7996bc47bd15d9449b1c9c8158c849e.jpg","meta":"[日]菊池祐纪 / 毛丹青 / 接力出版社","rating":"2020-12-25","comment":""},{"title":"心路沧桑","alt":"https://book.douban.com/subject/26358083/","image":"https://minio.mythsman.com/douban/48960beb2831719f421301391aee5c91.jpg","meta":"高戈里 / 四川人民出版社","rating":"2020-12-24","comment":""},{"title":"金蔷薇","alt":"https://book.douban.com/subject/4908886/","image":"https://minio.mythsman.com/douban/c2785cb7a1f8ada84b05e4c9c60665e6.jpg","meta":"[俄]帕乌斯托夫斯基 / 戴骢 / 上海译文出版社","rating":"2020-12-15","comment":""},{"title":"一朵桔梗花","alt":"https://book.douban.com/subject/27001114/","image":"https://minio.mythsman.com/douban/1567bd60d6751103760331cd20397dd3.jpg","meta":"[日] 连城三纪彦 / 钟肇政 / 林新生 / 新星出版社","rating":"2020-12-12","comment":""},{"title":"中国抗日ドラマ読本","alt":"https://book.douban.com/subject/30177194/","image":"https://minio.mythsman.com/douban/2c8cc446681aadfa0755fff43f9c54ab.jpg","meta":"岩田宇伯 / パブリブ","rating":"2020-11-21","comment":""},{"title":"你的夏天还好吗？","alt":"https://book.douban.com/subject/26953294/","image":"https://minio.mythsman.com/douban/af97dd3c5d5418ce648500ccdc5c8c95.jpg","meta":"金爱烂 / 薛舟 / 人民文学出版社","rating":"2020-11-16","comment":""},{"title":"不方便，但很幸福","alt":"https://book.douban.com/subject/35183770/","image":"https://minio.mythsman.com/douban/4e9d0bda0dd7423664f2381d6436cda9.jpg","meta":"[韩] 洪渊植 编绘 / 米糕 / 湖南美术出版社 / 后浪","rating":"2020-11-11","comment":""},{"title":"农民自杀研究","alt":"https://book.douban.com/subject/26260799/","image":"https://minio.mythsman.com/douban/0a59b49ab752d6f6fe1ceae03a3ac25c.jpg","meta":"刘燕舞 / 社会科学文献出版社","rating":"2020-10-16","comment":""},{"title":"中国国家治理的制度逻辑","alt":"https://book.douban.com/subject/26901114/","image":"https://minio.mythsman.com/douban/a27615d8f1f1f26a1fc5c82d95557d0b.jpg","meta":"周雪光 / 生活·读书·新知三联书店","rating":"2020-06-15","comment":""},{"title":"椅子100","alt":"https://book.douban.com/subject/30404929/","image":"https://minio.mythsman.com/douban/a220cad91bf18c34150af8bdf631e924.jpg","meta":"[英] 露西•莱德•理查森 / 乔阿苏 / 新星出版社","rating":"2020-06-01","comment":""},{"title":"茶室交易","alt":"https://book.douban.com/subject/26841123/","image":"https://minio.mythsman.com/douban/08bfb9ea134e976a74902c3470ad20f6.jpg","meta":"洛德.韓菲瑞斯(Laud Humphreys) / 高穎超 / 群學","rating":"2020-05-18","comment":""},{"title":"我已与一万亿株白桦相逢","alt":"https://book.douban.com/subject/26587564/","image":"https://minio.mythsman.com/douban/1a090aae2de27e926828bef28f9f2ebb.jpg","meta":"胡成 / 广东人民出版社","rating":"2020-05-10","comment":""},{"title":"天啓の殺意","alt":"https://book.douban.com/subject/3807266/","image":"https://minio.mythsman.com/douban/eacf26cc53dbecde95e9a2e114f18668.jpg","meta":"中町信 / 東京創元社","rating":"2020-03-18","comment":""},{"title":"克莱因壶","alt":"https://book.douban.com/subject/33658616/","image":"https://minio.mythsman.com/douban/0280a2d4dfbd0260bd753913ed4134ae.jpg","meta":"[日]冈岛二人 / 张舟 / 化学工业出版社 / 悦读名品","rating":"2019-12-28","comment":""},{"title":"训诂学","alt":"https://book.douban.com/subject/1436119/","image":"https://minio.mythsman.com/douban/a5fb741d0d99e638cd44e6649f26097c.jpg","meta":"郭在贻 / 中华书局","rating":"2019-12-27","comment":""},{"title":"芬尼根的守灵夜（第一卷）","alt":"https://book.douban.com/subject/11604737/","image":"https://minio.mythsman.com/douban/592a583684d97ddf2103a8a97c97e8c0.jpg","meta":"[爱尔兰] 詹姆斯·乔伊斯 / 戴从容 / 上海人民出版社","rating":"2019-12-27","comment":""},{"title":"汉魏六朝赋选","alt":"https://book.douban.com/subject/33372361/","image":"https://minio.mythsman.com/douban/58e4c3139fc9a15f3991aafabe12fe6e.jpg","meta":"瞿蜕园 选注 / 上海古籍出版社","rating":"2019-12-24","comment":""},{"title":"平原上的摩西","alt":"https://book.douban.com/subject/26803179/","image":"https://minio.mythsman.com/douban/cc2a2a558836797967f72a065da9d7d8.jpg","meta":"双雪涛 / 百花文艺出版社 / 青橙文化","rating":"2019-12-24","comment":""},{"title":"死雅","alt":"https://book.douban.com/subject/2021617/","image":"https://minio.mythsman.com/douban/1ed685c41ab2efd398bcfc5958e076fd.jpg","meta":"鲍延毅 / 中国大百科全书出版社","rating":"2019-12-24","comment":""},{"title":"一个自杀者的传说","alt":"https://book.douban.com/subject/25871958/","image":"https://minio.mythsman.com/douban/d38ea944cf825bff338780352a2824c8.jpg","meta":"(美)大卫·范恩 / 潘爱娟 / 索马里 / 上海文艺出版社 / 99读书人","rating":"2019-12-23","comment":""},{"title":"尼古拉·果戈理","alt":"https://book.douban.com/subject/21690132/","image":"https://minio.mythsman.com/douban/952feef5d9d1337ac04455a66f2c57f3.jpg","meta":"[美国] 弗拉基米尔·纳博科夫 / 金绍禹 / 上海译文出版社","rating":"2019-12-23","comment":""},{"title":"魔术师时代","alt":"https://book.douban.com/subject/34464687/","image":"https://minio.mythsman.com/douban/aa59a7ff0be6339c48f14de513636780.jpg","meta":"[德]沃尔夫拉姆·艾伦伯格 / 林灵娜 / 上海文艺出版社 / 艺文志eons","rating":"2019-12-18","comment":""},{"title":"山月记","alt":"https://book.douban.com/subject/20473505/","image":"https://minio.mythsman.com/douban/84adb7d9e69b0b6b2b1ac0b2b4334f56.jpg","meta":"[日]中岛敦 / 韩冰 / 孙志勇 / 中华书局","rating":"2019-12-17","comment":""},{"title":"家鸭与野鸭的投币式寄物柜","alt":"https://book.douban.com/subject/6041089/","image":"https://minio.mythsman.com/douban/a6bdfc5e865b58617b18198e924c0c42.jpg","meta":"[日] 伊坂幸太郎 / 王华懋 / 译林出版社","rating":"2019-12-16","comment":""},{"title":"伊利亚随笔选","alt":"https://book.douban.com/subject/1960044/","image":"https://minio.mythsman.com/douban/1c4ec1ff05bb3759e265775f6104c886.jpg","meta":"[英] 查尔斯·兰姆 / 刘炳善 / 上海译文出版社","rating":"2019-12-14","comment":""},{"title":"月亮宝石","alt":"https://book.douban.com/subject/2065346/","image":"https://minio.mythsman.com/douban/47dfe3e56c273d4789723ab04f6305ba.jpg","meta":"[英国] 威尔基·柯林斯 / 徐汝椿 / 陈良廷 / 刘文澜 / 上海译文出版社","rating":"2019-12-14","comment":""},{"title":"卡图卢斯《歌集》拉中对照译注本","alt":"https://book.douban.com/subject/3309694/","image":"https://minio.mythsman.com/douban/beb1ee04d3dbef9c1f9331d46c8bc40b.jpg","meta":"[古罗马]卡图卢斯 / 李永毅 / 中国青年出版社","rating":"2019-12-14","comment":""},{"title":"华兹华斯诗选","alt":"https://book.douban.com/subject/10561254/","image":"https://minio.mythsman.com/douban/6f32b6add5ed37ca8a3f70d172e44038.jpg","meta":"威廉·华兹华斯 / 杨德豫 / 外语教学与研究出版社","rating":"2019-12-14","comment":""},{"title":"幸福而短促的人生","alt":"https://book.douban.com/subject/3206897/","image":"https://minio.mythsman.com/douban/11099161ba847fa67a785dd9206a34fa.jpg","meta":"塞涅卡 / 赵又春 / 张建军 / 上海三联书店","rating":"2019-12-14","comment":""},{"title":"漂泊的灵魂","alt":"https://book.douban.com/subject/19967328/","image":"https://minio.mythsman.com/douban/b4498053f940c18b72f21737740a90f0.jpg","meta":"(德)赫尔曼·黑塞 / 吴忆帆 / 上海三联书店 / 凤凰壹力","rating":"2019-12-08","comment":""},{"title":"绝境","alt":"https://book.douban.com/subject/1958880/","image":"https://minio.mythsman.com/douban/8b6eb6869c75801875fec91a484c2e8d.jpg","meta":"[俄罗斯] 米·彼·阿尔志跋绥夫 / 王榭堂 / 新星出版社","rating":"2019-12-06","comment":""},{"title":"跨越边界的社区（修订版）","alt":"https://book.douban.com/subject/30116399/","image":"https://minio.mythsman.com/douban/19813e985e347085a457cbed566dd2c8.jpg","meta":"项飙 / 生活·读书·新知三联书店","rating":"2019-11-30","comment":""},{"title":"渊之信","alt":"https://book.douban.com/subject/34762492/","image":"https://minio.mythsman.com/douban/c2c22f97ca8c3b70bf723c906dc4d7de.jpg","meta":"[韩]赵贤娥","rating":"2019-11-23","comment":""},{"title":"平安朝的生活与文学","alt":"https://book.douban.com/subject/30473225/","image":"https://minio.mythsman.com/douban/184517e8240db65f781200d8d43f6512.jpg","meta":"[日] 池田龟鉴 / 玖羽 / 四川人民出版社 / 后浪","rating":"2019-11-09","comment":""},{"title":"伟大的书","alt":"https://book.douban.com/subject/1066762/","image":"https://minio.mythsman.com/douban/f2c903ed78e9fcbda34cbd9c9f0514d0.jpg","meta":"[美] 大卫·丹比 / 曹雅学 / 江苏人民出版社","rating":"2019-11-07","comment":""},{"title":"庞贝","alt":"https://book.douban.com/subject/34438693/","image":"https://minio.mythsman.com/douban/853b9330434130c9db3b704f69d426b9.jpg","meta":"[英] 玛丽·比尔德 / Mary Beard / 熊宸 / 王晨 / 民主与建设出版社 / 后浪","rating":"2019-10-21","comment":""},{"title":"时间的秩序","alt":"https://book.douban.com/subject/33424487/","image":"https://minio.mythsman.com/douban/48d249d28483d1b2fb7641494dc4fe1d.jpg","meta":"[意] 卡洛·罗韦利 / 杨光 / 湖南科学技术出版社 / 企鹅兰登中国 / 博集天卷","rating":"2019-10-21","comment":""},{"title":"4321","alt":"https://book.douban.com/subject/30254236/","image":"https://minio.mythsman.com/douban/992e7e15677bec0065ac38836c4199a5.jpg","meta":"[美] 保罗·奥斯特 / 李鹏程 / 九州出版社 / 理想国","rating":"2019-10-05","comment":""},{"title":"别睡，这里有蛇","alt":"https://book.douban.com/subject/32567290/","image":"https://minio.mythsman.com/douban/895e7d6abb1ff9df3a0d0490c6827dcd.jpg","meta":"[美] 丹尼尔·埃弗里特 / 潘丽君 / 新世界出版社","rating":"2019-09-20","comment":""},{"title":"故事写作大师班","alt":"https://book.douban.com/subject/33411972/","image":"https://minio.mythsman.com/douban/01cbb506f69305c372245e716fd595f3.jpg","meta":"[美]约翰•特鲁比 / 江先声 / 湖南文艺出版社 / 浦睿文化","rating":"2019-07-17","comment":""},{"title":"夏日纪事","alt":"https://book.douban.com/subject/33431300/","image":"https://minio.mythsman.com/douban/34b5b8b2173466dd7b1605c89f7c6a38.jpg","meta":"[法] 克里斯多夫·夏布特 编绘 / 顾永庆 / 湖南美术出版社 / 后浪","rating":"2019-06-21","comment":""},{"title":"树下长椅","alt":"https://book.douban.com/subject/30458203/","image":"https://minio.mythsman.com/douban/868781aac84c4730dcf5c023c62613a2.jpg","meta":"[法] 克里斯多夫·夏布特 / 后浪漫 / 湖南美术出版社 / 后浪","rating":"2019-06-12","comment":""},{"title":"喜鹊谋杀案","alt":"https://book.douban.com/subject/33445034/","image":"https://minio.mythsman.com/douban/0d149a1a04979a540345afb65793b3f9.jpg","meta":"[英] 安东尼·霍洛维茨 / 梁清新 / 新星出版社","rating":"2019-06-09","comment":""},{"title":"突然，响起一阵敲门声","alt":"https://book.douban.com/subject/25724491/","image":"https://minio.mythsman.com/douban/71e09433f24075c260d25404964c21b6.jpg","meta":"[以色列] 埃特加·凯雷特 / 楼武挺 / 上海文艺出版社 / 99读书人","rating":"2019-05-15","comment":""},{"title":"德伯家的苔丝","alt":"https://book.douban.com/subject/1035477/","image":"https://minio.mythsman.com/douban/83d76070c17abfb9611520f06f254277.jpg","meta":"[英] 哈代 / 张谷若 / 人民文学出版社","rating":"2019-05-07","comment":""},{"title":"青铜骑士","alt":"https://book.douban.com/subject/2093212/","image":"https://minio.mythsman.com/douban/1651fc21b617ceadffb001a221fd823b.jpg","meta":"[俄罗斯] 亚历山大·普希金 / 穆旦 / 新文艺出版社","rating":"2019-04-19","comment":""},{"title":"国境以南 太阳以西","alt":"https://book.douban.com/subject/1015452/","image":"https://minio.mythsman.com/douban/9f30d6cdffb128c48716dbcc57a41aff.jpg","meta":"[日] 村上春树 / 林少华 / 上海译文出版社","rating":"2019-04-19","comment":""},{"title":"没有画的画册","alt":"https://book.douban.com/subject/1058413/","image":"https://minio.mythsman.com/douban/df3d1d0e3f5d684e24a46d4c0eaff497.jpg","meta":"[丹麦] 汉斯·克里斯蒂安·安徒生 / 林桦 / 上海社会科学院出版社","rating":"2019-04-18","comment":""},{"title":"哈克贝利·费恩历险记","alt":"https://book.douban.com/subject/1072508/","image":"https://minio.mythsman.com/douban/980d7dd3bb976d503b83ae59ea2178fc.jpg","meta":"[美] 马克·吐温 / 成时 / 人民文学出版社","rating":"2019-04-18","comment":""},{"title":"玛尔夏斯的芦笛","alt":"https://book.douban.com/subject/30430892/","image":"https://minio.mythsman.com/douban/260f0339909330e138f7a53ef32d7d71.jpg","meta":"[阿尔巴尼亚]舒特里奇 / 王崇廉 / 少年儿童出版社","rating":"2019-04-18","comment":""},{"title":"雾海孤帆","alt":"https://book.douban.com/subject/3223057/","image":"https://minio.mythsman.com/douban/f4c413946e1cee8c8231d95f20051ec8.jpg","meta":"卡达耶夫 / В.Катаев / 朱明 / 中国青年出版社","rating":"2019-04-18","comment":""},{"title":"草原上的小木屋","alt":"https://book.douban.com/subject/1915476/","image":"https://minio.mythsman.com/douban/222fbc3149c65bbf01081dcf7584b50d.jpg","meta":"[美] 罗兰·英格斯·怀德 著 / [美] 贾士·威廉斯 图 / 温淑真 / 天地出版社","rating":"2019-04-18","comment":""},{"title":"草原上的田庄","alt":"https://book.douban.com/subject/3223726/","image":"https://minio.mythsman.com/douban/8716fa846476fcdbc7c232fa81cf36ef.jpg","meta":"卡达耶夫 / В.Катаев / 方予 / 上海文艺出版社","rating":"2019-04-18","comment":""},{"title":"小癞子","alt":"https://book.douban.com/subject/25790638/","image":"https://minio.mythsman.com/douban/76ba5c9b5c42acdce06c51e5ddf0b3e8.jpg","meta":"[西班牙] 佚名 / 杨绛 / 人民文学出版社","rating":"2019-04-18","comment":""},{"title":"在人间","alt":"https://book.douban.com/subject/1085856/","image":"https://minio.mythsman.com/douban/38a56e84941cde19160057c20a75f34e.jpg","meta":"高尔基 / 楼适夷 / 人民文学出版社","rating":"2019-04-18","comment":""},{"title":"涅朵奇卡·涅茨瓦诺娃","alt":"https://book.douban.com/subject/2131426/","image":"https://minio.mythsman.com/douban/936d2b46dc5967a57b136e87097186c7.jpg","meta":"[俄] 费奥多尔·陀思妥耶夫斯基 / 陈林 / 沈序 / 上海文艺出版社","rating":"2019-04-18","comment":""},{"title":"苏联检察院对5810例反苏维埃鼓动宣传活动案件的司法复查","alt":"https://book.douban.com/subject/4894618/","image":"https://minio.mythsman.com/douban/323236fa4ab79a81d0637b86b812f79e.jpg","meta":"(俄)埃德尔曼 / 方琼 / 唐福山 / 张达楠（校注） / 人民出版社","rating":"2019-02-20","comment":""},{"title":"这里","alt":"https://book.douban.com/subject/27108544/","image":"https://minio.mythsman.com/douban/edb81a72e5e65f25a7300c5a0b0f0f91.jpg","meta":"[美] 理查德·麦奎尔 / 廖伟棠 / 北京联合出版公司 / 后浪","rating":"2018-12-29","comment":""},{"title":"见字如面","alt":"https://book.douban.com/subject/27040710/","image":"https://minio.mythsman.com/douban/f95f557f40aa4fb999502421a8b9b9cc.jpg","meta":"李世强 / 三辰影库音像出版社","rating":"2017-05-27","comment":""},{"title":"设计诗","alt":"https://book.douban.com/subject/6975925/","image":"https://minio.mythsman.com/douban/aa50cfeea5f9d89a41481bf690090e9d.jpg","meta":"朱赢椿 / 广西师范大学出版社 / 理想国","rating":"2015-04-04","comment":""}],
+            do: [],
+            collect: [{"title":"罪恶捕手","alt":"https://book.douban.com/subject/35799458/","image":"https://minio.mythsman.com/douban/dd658aa77f871e4fb117da1f52ab54cb.jpg","meta":"多纳托·卡瑞西 / 吴宗璘 / 文汇出版社 / 读客文化","rating":"2023-08-01 / ★★★★☆ 推荐","comment":""},{"title":"六個說謊的大學生","alt":"https://book.douban.com/subject/35817587/","image":"https://minio.mythsman.com/douban/3970d2c4c11387bd9165f6addbff4cd1.jpg","meta":"淺倉秋成 / 楊明綺 / 采實文化","rating":"2023-05-14 / ★★★★★ 力荐","comment":""},{"title":"假面游戏","alt":"https://book.douban.com/subject/35099124/","image":"https://minio.mythsman.com/douban/9c26ff6502b08dd50d637e4d8577f1f7.jpg","meta":"[法] 保罗·霍尔特 / 王宇桐 / 青岛出版社","rating":"2023-04-24 / ★★★★☆ 推荐","comment":""},{"title":"13级台阶","alt":"https://book.douban.com/subject/1130033/","image":"https://minio.mythsman.com/douban/23600d448b69cbdbc9ba098122fc1f7d.jpg","meta":"高野和明 / 吴晓玲 / 山东文艺出版社","rating":"2023-04-15 / ★★★★☆ 推荐","comment":""},{"title":"米的缺失","alt":"https://book.douban.com/subject/26770271/","image":"https://minio.mythsman.com/douban/2ba7274178b5613e814a952612f396e9.jpg","meta":"Maritime kalligraph / Ocean calligrapher / 海上书法家 / 四海堂印刷所书店","rating":"2023-04-01 / ★★☆☆☆ 较差","comment":""},{"title":"金色梦乡","alt":"https://book.douban.com/subject/5038409/","image":"https://minio.mythsman.com/douban/f68561450fd804623467c4eba7c7388d.jpg","meta":"[日] 伊坂幸太郎 / 李彦桦 / 译林出版社","rating":"2023-03-07 / ★★★★★ 力荐","comment":""},{"title":"如首无作祟之物","alt":"https://book.douban.com/subject/35406149/","image":"https://minio.mythsman.com/douban/5a507f665dbf4ae9fc55fdcb818678a1.jpg","meta":"[日] 三津田信三 / 张舟 / 文化发展出版社 / 力潮文创","rating":"2023-03-04 / ★★★★★ 力荐","comment":""},{"title":"独行女","alt":"https://book.douban.com/subject/6072914/","image":"https://minio.mythsman.com/douban/15c7a6550acd7735d78cc51fc521f31e.jpg","meta":"(美)海伦·麦克洛伊 / 吴彦妮 / 吉林出版集团","rating":"2023-02-26 / ★★★★★ 力荐","comment":""},{"title":"我们盗走星座的理由","alt":"https://book.douban.com/subject/34860553/","image":"https://minio.mythsman.com/douban/5b53599f5fd47eaa2a34fe0c3ca43426.jpg","meta":"（日）北山猛邦 / 张北辰 / 新星出版社","rating":"2023-02-07 / ★★★★☆ 推荐","comment":""},{"title":"連續殺人鬼青蛙男","alt":"https://book.douban.com/subject/26362244/","image":"https://minio.mythsman.com/douban/bbe5d33aeaacf2b46487c0b2553e2f25.jpg","meta":"中山七里 / 林美琪 / 瑞昇文化","rating":"2022-11-14 / ★★★★☆ 推荐","comment":""},{"title":"完美嫌疑人","alt":"https://book.douban.com/subject/35196344/","image":"https://minio.mythsman.com/douban/e0fb3879c729df1659f9cdd1502168e3.jpg","meta":"陈研一 / 天津人民出版社 / 雁北堂","rating":"2022-11-03 / ★★★★☆ 推荐","comment":""},{"title":"圣母","alt":"https://book.douban.com/subject/30475757/","image":"https://minio.mythsman.com/douban/92c159b7ec2403dae59faaca38716a88.jpg","meta":"[日]秋吉理香子 / 郑晓蕾 / 新星出版社","rating":"2022-09-18 / ★★★★☆ 推荐","comment":""},{"title":"怪人们","alt":"https://book.douban.com/subject/4903189/","image":"https://minio.mythsman.com/douban/564a4576c0810d01dedc09b9cc6af82e.jpg","meta":"(日) 东野圭吾 / 尹月 / 人民文学出版社 / 99读书人","rating":"2022-08-11 / ★★★☆☆ 还行","comment":""},{"title":"剪刀男","alt":"https://book.douban.com/subject/34922235/","image":"https://minio.mythsman.com/douban/bf401710acf6e7e758b1dda86221ef4b.jpg","meta":"[日] 殊能将之 / 龚婉如 / 新星出版社","rating":"2022-07-24 / ★★★★☆ 推荐","comment":""},{"title":"第七重解答","alt":"https://book.douban.com/subject/4140380/","image":"https://minio.mythsman.com/douban/12003688c74748f0ae5455aec3c50cca.jpg","meta":"[法]保罗·霍尔特 / 王琢 / 新星出版社","rating":"2022-04-25 / ★★★★★ 力荐","comment":""},{"title":"希腊棺材之谜","alt":"https://book.douban.com/subject/26941500/","image":"https://minio.mythsman.com/douban/733ee1625211d6382665d395144d8da5.jpg","meta":"[美] 埃勒里·奎因 / 王敬之 / 新星出版社","rating":"2022-04-13 / ★★★★☆ 推荐","comment":""},{"title":"毒巧克力命案","alt":"https://book.douban.com/subject/4191444/","image":"https://minio.mythsman.com/douban/412685187ce163d6d86ecbdffeae9a22.jpg","meta":"[英国] 安东尼·伯克莱 / 赖文珍 / 吉林出版集团","rating":"2022-04-01 / ★★★★☆ 推荐","comment":""},{"title":"帷幕","alt":"https://book.douban.com/subject/26292535/","image":"https://minio.mythsman.com/douban/e2f13833dfe59865644f944120f46ee8.jpg","meta":"[英] 阿加莎·克里斯蒂 / 李杨 / 新星出版社","rating":"2022-01-22 / ★★★★★ 力荐","comment":""},{"title":"绝叫","alt":"https://book.douban.com/subject/35031587/","image":"https://minio.mythsman.com/douban/ddb4b7b14a0b60624ddbb6f0fee38f24.jpg","meta":"[日] 叶真中显 / 林佩瑾 / 北京联合出版公司 / 联合读创","rating":"2022-01-18 / ★★★★★ 力荐","comment":""},{"title":"X的悲剧","alt":"https://book.douban.com/subject/3347997/","image":"https://minio.mythsman.com/douban/a93798c0794202bb793ac07e7ce30c07.jpg","meta":"[美国] 埃勒里·奎因 / 唐诺 / 新星出版社","rating":"2022-01-09 / ★★★★☆ 推荐","comment":""},{"title":"爱的成人式","alt":"https://book.douban.com/subject/30170980/","image":"https://minio.mythsman.com/douban/c737238416629c36a874201930661046.jpg","meta":"[日]乾胡桃 / 丁楠 / 现代出版社","rating":"2022-01-05 / ★★★★☆ 推荐","comment":""},{"title":"罗杰疑案","alt":"https://book.douban.com/subject/21371175/","image":"https://minio.mythsman.com/douban/d013e2eb6f5cc34980889edec213825a.jpg","meta":"[英] 阿加莎·克里斯蒂 / 常禾 / 新星出版社","rating":"2021-12-31 / ★★★★★ 力荐","comment":""},{"title":"斯泰尔斯庄园奇案","alt":"https://book.douban.com/subject/21692860/","image":"https://minio.mythsman.com/douban/70a7f3a08d0f28c31502bd03ad269f48.jpg","meta":"[英] 阿加莎·克里斯蒂 / 郑卫明 / 新星出版社","rating":"2021-11-20 / ★★★★☆ 推荐","comment":""},{"title":"恋爱写真","alt":"https://book.douban.com/subject/1414622/","image":"https://minio.mythsman.com/douban/7a316e7d4ea2ff13127e2aa3e6369455.jpg","meta":"[日] 市川拓司 / 隋娟 / 南海出版公司 / 新经典文化","rating":"2021-07-01 / ★★★★☆ 推荐","comment":""},{"title":"西方哲学史讲演录","alt":"https://book.douban.com/subject/4246032/","image":"https://minio.mythsman.com/douban/6df731d90519a476be41efe5eb82cce5.jpg","meta":"赵林 / 高等教育出版社","rating":"2020-12-08 / ★★★★★ 力荐","comment":""},{"title":"中国哲学简史","alt":"https://book.douban.com/subject/20501147/","image":"https://minio.mythsman.com/douban/3a865e86453168f6d72ca920161f9682.jpg","meta":"冯友兰 / 涂又光 / 北京大学出版社","rating":"2020-09-30","comment":""},{"title":"死了七次的男人","alt":"https://book.douban.com/subject/27055125/","image":"https://minio.mythsman.com/douban/484f834a3b75be578c0439202df1e6f2.jpg","meta":"[日] 西泽保彦 / 马杰 / 新星出版社","rating":"2020-07-27 / ★★★★☆ 推荐","comment":""},{"title":"马丁·伊登","alt":"https://book.douban.com/subject/1075371/","image":"https://minio.mythsman.com/douban/4aa31fa31d81c0860963049513b461a6.jpg","meta":"（美）杰克・伦敦 / 殷惟本 / 人民文学出版社","rating":"2020-06-24 / ★★★★★ 力荐","comment":""},{"title":"吃鲷鱼让我打嗝","alt":"https://book.douban.com/subject/26893260/","image":"https://minio.mythsman.com/douban/a994e525990024e01460905e7edd23c6.jpg","meta":"[美] 杰西·艾森伯格 / 吴文忠 / 人民文学出版社","rating":"2020-05-26 / ★★★☆☆ 还行","comment":""},{"title":"有呀有呀书店","alt":"https://book.douban.com/subject/30288379/","image":"https://minio.mythsman.com/douban/4baae753ee8ffabd9820c3592833582a.jpg","meta":"[日]吉竹伸介 / 任青云 / 中信出版社","rating":"2020-05-18 / ★★★★★ 力荐","comment":""},{"title":"美好的七年","alt":"https://book.douban.com/subject/26642648/","image":"https://minio.mythsman.com/douban/50e2b6c110bf366e4ff0df4f1ab894ed.jpg","meta":"[以色列] 埃特加·凯雷特 / 方铁 / 上海文艺出版社 / 99读书人","rating":"2020-05-01 / ★★★★☆ 推荐","comment":""},{"title":"最后一个故事，就这样啦","alt":"https://book.douban.com/subject/26881656/","image":"https://minio.mythsman.com/douban/c69bf80011d6f495db294d5bef017a01.jpg","meta":"[以色列] 埃特加·凯雷特 / Etgar Keret / 方铁 / 人民文学出版社 / 99读书人","rating":"2019-12-25 / ★★★★☆ 推荐","comment":""},{"title":"根西岛文学与土豆皮馅饼俱乐部","alt":"https://book.douban.com/subject/4152770/","image":"https://minio.mythsman.com/douban/6f6899f87dfd73cf1c3f9f70c916de0c.jpg","meta":"(美) 谢弗, (美) 拜罗斯著 / Mary Ann Shaffer , Annie Barrows / 张敏 / 南海出版公司 / 新经典文化","rating":"2019-12-17 / ★★★★★ 力荐","comment":""},{"title":"蛤蟆的油","alt":"https://book.douban.com/subject/25903505/","image":"https://minio.mythsman.com/douban/f0acdea344a61329602c6061af41a938.jpg","meta":"[日]黑泽明 / 李正伦 / 南海出版公司 / 新经典文化","rating":"2019-12-11 / ★★★★☆ 推荐","comment":""},{"title":"遥远的向日葵地","alt":"https://book.douban.com/subject/27184303/","image":"https://minio.mythsman.com/douban/a5ae8826332c2c83936d4e8351378ae4.jpg","meta":"李娟 / 花城出版社","rating":"2019-12-06 / ★★★★☆ 推荐","comment":""},{"title":"双曲线的杀人案","alt":"https://book.douban.com/subject/4181156/","image":"https://minio.mythsman.com/douban/02908a8cb660c7b34d68e07b966d2de8.jpg","meta":"[日] 西村京太郎 / 张国铮 / 海南人民出版社","rating":"2019-11-14 / ★★★★☆ 推荐","comment":""},{"title":"高龙巴","alt":"https://book.douban.com/subject/1657484/","image":"https://minio.mythsman.com/douban/28a91fc04ae4fb89a5e95691dc7f95e3.jpg","meta":"[法] 梅里美 / 傅雷（译者） / 外语教学与研究出版社","rating":"2019-09-21 / ★★★★☆ 推荐","comment":""},{"title":"ZOO","alt":"https://book.douban.com/subject/2297697/","image":"https://minio.mythsman.com/douban/965e7eba1b2e10e286d17cacbe2c17b2.jpg","meta":"[日] 乙一 / 李颖秋 / 当代世界出版社","rating":"2019-09-21 / ★★★★★ 力荐","comment":""},{"title":"小说课","alt":"https://book.douban.com/subject/26951584/","image":"https://minio.mythsman.com/douban/f49dbfd828eb504442e6a90cd70fefd0.jpg","meta":"毕飞宇 / 人民文学出版社 / 明哲文化","rating":"2019-05-07 / ★★★★☆ 推荐","comment":""},{"title":"绿毛水怪","alt":"https://book.douban.com/subject/30163860/","image":"https://minio.mythsman.com/douban/e298f6323bdd2fb1e0add90e0547a578.jpg","meta":"王小波 / 北京十月文艺出版社 / 新经典·琥珀 / 新经典文化","rating":"2019-05-04 / ★★★★★ 力荐","comment":""},{"title":"向左走·向右走","alt":"https://book.douban.com/subject/1066462/","image":"https://minio.mythsman.com/douban/aa467bb4835984f45e8cef50172ac31b.jpg","meta":"幾米 / 生活·读书·新知三联书店","rating":"2019-04-27 / ★★★★☆ 推荐","comment":""},{"title":"这样写出好故事","alt":"https://book.douban.com/subject/27043711/","image":"https://minio.mythsman.com/douban/7fd92521b5b690d28f1173ec794e8c67.jpg","meta":"[美] 詹姆斯·斯科特·贝尔 / 苏雅薇 / 湖南文艺出版社","rating":"2019-04-11 / ★★★★☆ 推荐","comment":""},{"title":"畅销作家写作全技巧","alt":"https://book.douban.com/subject/27029463/","image":"https://minio.mythsman.com/douban/269a16d16b2c8b8f5b0d4b390ab55de8.jpg","meta":"[日] 大泽在昌 / 程亮 / 江西人民出版社 / 后浪","rating":"2019-04-04 / ★★★★☆ 推荐","comment":""},{"title":"奇想，天动","alt":"https://book.douban.com/subject/23780806/","image":"https://minio.mythsman.com/douban/baa250f9e27baa0dbf3c8ee83fc8a948.jpg","meta":"[日] 岛田庄司 / 林敏生 / 新星出版社","rating":"2019-04-02 / ★★★☆☆ 还行","comment":""},{"title":"如何写影评","alt":"https://book.douban.com/subject/3806309/","image":"https://minio.mythsman.com/douban/3ed94a5a4a7296e2fb0569a9c0ac735a.jpg","meta":"(美)蒂莫西•科里根 / 陆绍阳 / 宋美凤 / 世界图书出版公司 / 后浪","rating":"2019-04-02 / ★★★☆☆ 还行","comment":""}]
+        }
+
+        let nav = {
+            page: 0,
+            pageMax: 1,
+            action: 'collect'
+        }
+
+        let meta_max_line = 4;
+        let item_per_page = 10;
+
+        // ======== index ========
+
+        function tabClick(node, action) {
+            for (let childNode of node.parentNode.children) {
+                if (childNode.classList.contains('hexo-douban-tab-' + action)) {
+                    childNode.classList.add('hexo-douban-tab-active');
+                } else {
+                    childNode.classList.remove('hexo-douban-tab-active');
+                }
+            }
+
+            renderList(action, 1)
+        }
+
+
+        // ======== pagination ========
+        (function initPagination() {
+            let firstpage = document.querySelector(".hexo-douban-firstpage");
+            let previouspage = document.querySelector(".hexo-douban-previouspage");
+            let nextpage = document.querySelector(".hexo-douban-nextpage");
+            let lastpage = document.querySelector(".hexo-douban-lastpage");
+
+            //add listener
+            firstpage.onclick = () => renderList(nav.action, 1);
+            previouspage.onclick = () => renderList(nav.action, Math.max(1, nav.page - 1));
+            nextpage.onclick = () => renderList(nav.action, Math.min(nav.page + 1, nav.pageMax));
+            lastpage.onclick = () => renderList(nav.action, nav.pageMax);
+        })();
+
+
+        // ======== init index ========
+
+        (function initIndex() {
+            let tabDo = document.querySelector(".hexo-douban-tab-do");
+            tabDo.onclick = () => tabClick(tabDo, 'do');
+
+            let tabWish = document.querySelector(".hexo-douban-tab-wish");
+            tabWish.onclick = () => tabClick(tabWish, 'wish');
+
+            let tabCollect = document.querySelector(".hexo-douban-tab-collect");
+            tabCollect.onclick = () => tabClick(tabCollect, 'collect');
+
+            tabCollect.click();
+        })();
+
+        // ======== render ========
+        function renderList(action, page) {
+            if (action === nav.action && page === nav.page) {
+                return
+            }
+            nav.page = page
+            nav.pageMax = Math.max(1, Math.floor((data[action].length - 1) / item_per_page) + 1)
+            nav.action = action
+
+            document.querySelector('.hexo-douban-pagenum').textContent = `${nav.page} / ${nav.pageMax}`
+
+            let container = document.querySelector('.hexo-douban-items')
+            container.innerHTML = ''
+            for (let i = (page - 1) * item_per_page; i < Math.min(page * item_per_page, data[action].length); i++) {
+                container.append(renderItem(action, data[action][i]))
+            }
+        }
+
+        function renderItem(action, data) {
+            let item = document.createElement('div')
+            item.className = 'hexo-douban-item'
+
+            let picture = document.createElement('div')
+            picture.className = 'hexo-douban-picture'
+
+            let img = document.createElement('img')
+            img.src = data.image
+            img.loading = 'lazy'
+            img.referrerPolicy = 'no-referrer'
+            picture.append(img)
+
+            let info = document.createElement('div')
+            info.className = 'hexo-douban-info'
+
+            let title = document.createElement('div')
+            title.className = 'hexo-douban-title'
+
+            let link = document.createElement('a')
+            link.href = data.alt
+            link.target = '_blank'
+            link.textContent = data.title
+            title.append(link)
+
+            let meta = document.createElement('div')
+            meta.className = 'hexo-douban-meta'
+            meta.textContent = data.meta
+            meta.setAttribute('style', `-webkit-line-clamp: ${meta_max_line}`);
+
+            let rating = document.createElement('div')
+            rating.className = 'hexo-douban-rating'
+            rating.textContent = data.rating
+
+            let comment = document.createElement('div')
+            comment.className = 'hexo-douban-comment'
+            comment.textContent = data.comment
+
+            info.append(title, meta, rating, comment)
+
+            item.append(picture, info)
+            return item
+        }
+
+    })();
+
+</script>
+
+
+        </section>
+
+        <div id="tcomment"></div>
+        <script src="https://cdn.staticfile.org/twikoo/1.6.22/twikoo.all.min.js"></script>
+        <script>
+        twikoo.init({
+          envId: 'https://guoguo.zeabur.app/', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
+          el: '#tcomment', // 容器元素
+          // region: 'ap-guangzhou', // 环境地域，默认为 ap-shanghai，腾讯云环境填 ap-shanghai 或 ap-guangzhou；Vercel 环境不填
+          // path: location.pathname, // 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
+          // lang: 'zh-CN', // 用于手动设定评论区语言，支持的语言列表 https://github.com/twikoojs/twikoo/blob/main/src/client/utils/i18n/index.js
+        })
+        </script>
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 果果 | Made by <a href="https://guaxichi.github.io/" target="_blank">🍉</a></span>
+    </div>
+</footer>
+
+    </div>
+<script>!function(){"use strict";function r(e){var t=e.getAttribute("data-original"),n=new Image;n.onload=function(){e.setAttribute("src",t),e.style.paddingTop=""},n.src=t}document.addEventListener("DOMContentLoaded",function(){var t,e,n,i=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));i.length&&("undefined"!=typeof IntersectionObserver?(t=new IntersectionObserver(function(e,t){e.filter(function(e){return e.isIntersecting}).forEach(function(e){r(e.target),t.unobserve(e.target)})}),i.forEach(function(e){t.observe(e)})):(n=function(){clearTimeout(e),e=setTimeout(function(){(i=i.filter(function(e){return!e.src})).length?i.filter(function(e){e.getBoundingClientRect().top<window.innerHeight&&r(e)}):(window.removeEventListener("scroll",n),window.removeEventListener("resize",n))},100)},window.addEventListener("scroll",n),window.addEventListener("resize",n),n()))},!1)}();</script></body>
+
+
+<!-- 搜索功能 -->
+<!-- Chic/layout.ejs -->
+<div id="u-search">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="container">
+                <form id="u-search-modal-form" class="u-search-modal-form">
+                    <button type="submit" class="form-submit-btn">
+                        <img src="/image/search.png" class="search-btn-img" />
+                    </button>
+                    <input placeholder="搜索内容..." class="form-input" id="modal-form-input">
+                </form>
+                <a class="modal-close">x</a>
+            </div>
+            <div class="search-loading">
+                <div class="search-loading-bar"></div>
+            </div>
+        </div>
+        <div class="modal-body">
+        </div>
+    </div>
+    <div class="modal-overlay"></div>
+</div>
+
+
+</html>
