@@ -1452,6 +1452,9 @@ header label {
 .tag:not(:last-child) a::after {
   content: " / ";
 }
+#tcomment {
+  margin-top: 30px;
+}
 .post-toc {
   position: fixed;
   top: 95px;
