@@ -1452,8 +1452,8 @@ header label {
 .tag:not(:last-child) a::after {
   content: " / ";
 }
-#tcomment {
-  margin-top: 30px;
+.twikoo {
+  margin-top: 60px;
 }
 .post-toc {
   position: fixed;
