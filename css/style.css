@@ -1567,7 +1567,29 @@ header label {
   content: " / ";
 }
 .twikoo {
+  margin-top: 25px;
+}
+.pagination__title {
   margin-top: 60px;
+}
+.tk-expand,
+.tk-comments-container>.tk-comment,
+.tk-submit:nth-child(1) {
+  background: var(--card-bg);
+  border: 1px solid #e0e3ed;
+  transition: all 0.3s ease-in-out;
+  border-radius: 12px;
+}
+.talk_item:hover,
+.tk-comments-container>.tk-comment:hover,
+.tk-submit:nth-child(1):hover {
+  border-color: #49b1f5;
+}
+.tk-submit {
+  padding: 20px 10px 0;
+}
+.tk-comments-container>.tk-comment {
+  padding: 15px;
 }
 .post-toc {
   position: fixed;
