@@ -342,8 +342,8 @@ daovoice('update');
 </script>
 
 
-<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="思果椅" type="application/atom+xml">
-<style>.img-lazyload-container{overflow:hidden;max-width:100%}.img-lazyload-container img{max-width:100%;display:block;height:auto;transition:opacity .5s ease-in-out}.img-lazyload-container img:not([src]){height:0;opacity:0}</style></head>
+<meta name="generator" content="Hexo 6.3.0"><style>.img-lazyload-container{overflow:hidden;max-width:100%}.img-lazyload-container img{max-width:100%;display:block;height:auto;transition:opacity .5s ease-in-out}.img-lazyload-container img:not([src]){height:0;opacity:0}</style><link rel="alternate" href="/atom.xml" title="思果椅" type="application/atom+xml">
+</head>
 
 
 <body>
@@ -465,21 +465,24 @@ daovoice('update');
         
         <section class="post-content">
             <p>请唾弃我吧，这也是对我的抬举。</p>
-
+<div class="pagination__title">
+    <span class="pagination__title-h" style="font-size: 18px;"> <font size="3px"><svg t="1699600573283" class="icon" viewBox="0 0 1024 520" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="4332" width="20" height="20"><path d="M864 122H160c-52.9 0-96 43.1-96 96v448c0 52.9 43.1 96 96 96h203.5L512 902l148.4-140H864c52.9 0 96-43.1 96-96V218c0-52.9-43.1-96-96-96z m32 544c0 17.6-14.3 32-32 32H635L512 814 388.9 698H160c-17.7 0-32-14.4-32-32V218c0-17.7 14.3-32 32-32h704c17.7 0 32 14.3 32 32v448z" fill="#47444F" p-id="4333"></path><path d="M288 378c-35.3 0-64 28.7-64 64 0 35.4 28.7 64 64 64s64-28.6 64-64c0-35.3-28.7-64-64-64zM736 378c-35.3 0-64 28.7-64 64 0 35.4 28.7 64 64 64s64-28.6 64-64c0-35.3-28.7-64-64-64zM512 378c-35.3 0-64 28.7-64 64 0 35.4 28.7 64 64 64s64-28.6 64-64c0-35.3-28.7-64-64-64z" fill="#47444F" p-id="4334"></path></svg>&nbsp;留言板</font></span>
+    <hr>
+    <br>
+</div>
+<div id="tcomment"></div>
+<script src="https://cdn.staticfile.org/twikoo/1.6.22/twikoo.all.min.js"></script>
+<script>
+twikoo.init({
+  envId: 'https://guagua.netlify.app/.netlify/functions/twikoo', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
+  el: '#tcomment', // 容器元素
+  // region: 'ap-guangzhou', // 环境地域，默认为 ap-shanghai，腾讯云环境填 ap-shanghai 或 ap-guangzhou；Vercel 环境不填
+  // path: location.pathname, // 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
+  // lang: 'zh-CN', // 用于手动设定评论区语言，支持的语言列表   https://github.com/twikoojs/twikoo/blob/main/src/client/utils/i18n/index.js
+})
+</script>
         </section>
 
-        
-            <div id="tcomment"></div>
-            <script src="https://cdn.staticfile.org/twikoo/1.6.22/twikoo.all.min.js"></script>
-            <script>
-            twikoo.init({
-              envId: 'https://guagua.netlify.app/.netlify/functions/twikoo', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
-              el: '#tcomment', // 容器元素
-              // region: 'ap-guangzhou', // 环境地域，默认为 ap-shanghai，腾讯云环境填 ap-shanghai 或 ap-guangzhou；Vercel 环境不填
-              // path: location.pathname, // 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
-              // lang: 'zh-CN', // 用于手动设定评论区语言，支持的语言列表 https://github.com/twikoojs/twikoo/blob/main/src/client/utils/i18n/index.js
-            })
-            </script>
         
 
     </article>
