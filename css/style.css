@@ -861,7 +861,7 @@ input[type="radio"]:not(:checked) + label:after {
   -moz-osx-font-smoothing: grayscale;
 }
 
-.icon-book:before {
+.icon-tushu:before {
   content: "\f00a1";
 }
 
@@ -885,7 +885,7 @@ input[type="radio"]:not(:checked) + label:after {
   content: "\e601";
 }
 
-.icon-books:before {
+.icon-book:before {
   content: "\e7b3";
 }
 
@@ -1017,7 +1017,7 @@ input[type="radio"]:not(:checked) + label:after {
   content: "\e8ae";
 }
 
-.icon-blog:before {
+.icon-bianjiwenzhang_huaban:before {
   content: "\e62e";
 }
 
