@@ -428,28 +428,23 @@
         <h2 class="post-title">公告栏</h2>
         
         <section class="post-content">
-            <div class="js-pjax" id="tip" style="text-align:center;">ipseak加载中</div>
-<div class="js-pjax" id="ispeak"></div>
+            <div id="tip" style="text-align:center;">加载中，您稍等哈！</div>
+<div id="ispeak"></div>
 <link
   rel="stylesheet"
   href="https://cdn.staticfile.org/highlight.js/10.6.0/styles/atom-one-dark.min.css"
 />
 <link
   rel="stylesheet"
-  href="https://bore.vip/img/js/speak/style.css"
+  href="https://gcore.jsdelivr.net/npm/ispeak@4.4.0/style.css"
 />
 
-<style>
-  #article-container .D-avatar {
-    margin: 0 10px 0 0;
-  }
-  .D-footer {
-    display: none;
-  }
-</style>
 <script src="https://cdn.staticfile.org/highlight.js/10.6.0/highlight.min.js"></script>
 <script src="https://cdn.staticfile.org/marked/2.0.0/marked.min.js"></script>
-<script src="https://bore.vip/img/js/speak/ispeak.umd.js"></script>
+<script src="https://jsd.cdn.zzko.cn/npm/ispeak/ispeak.umd.js"></script>
+
+
+<script src="https://cdn.staticfile.org/twikoo/1.6.22/twikoo.all.min.js"></script>
 <script>
   var head = document.getElementsByTagName('head')[0]
   var meta = document.createElement('meta')
@@ -457,16 +452,22 @@
   meta.content = 'no-referrer'
   head.appendChild(meta)
   if (ispeak) {
-    ispeak
-      .init({
+    ispeak.init({
         el: '#ispeak',
         api: 'https://kkapi.togu.top/',
         author: '65757afb1367cc113013d276',
         pageSize: 10,
-        loading_img: 'https://bu.dusays.com/2022/05/01/626e88f349943.gif',
-        speakPage: '/notice',
-        githubClientId: '你的githubClientId',
-        hideComment: true,
+        loading_img: 'https://bu.dusays.com/2021/03/04/d2d5e983e2961.gif',
+        comment: function (speak) {
+          const { _id, title, content } = speak
+          // 4.4.0 之后在此回调函数中初始化评论
+          //这里是twikoo的初始化配置，如果使用其他评论可以在这里修改
+          twikoo.init({ 
+            el: '.ispeak-comment', // 默认情况下 ipseak 生成class为 ispeak-comment 的div
+            path: '/notice/?q=' + _id,
+            envId: "https://guoguo.togu.top/"
+          })
+        }
       })
       .then(function () {
         console.log('ispeak 加载完成')
@@ -476,24 +477,9 @@
     document.getElementById('tip').innerHTML = 'ipseak依赖加载失败！'
   }
 </script>
+
         </section>
 
-        
-            <div class="pagination__title">
-                <span class="pagination__title-h" style="font-size: 18px;"> <font size="3px">💬评论</font></span>
-                <hr>
-            </div>
-            <div id="tcomment"></div>
-            <script src="https://cdn.staticfile.org/twikoo/1.6.22/twikoo.all.min.js"></script>
-            <script>
-            twikoo.init({
-              envId: 'https://siguoyi.togu.top/.netlify/functions/twikoo', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
-              el: '#tcomment', // 容器元素
-              // region: 'ap-guangzhou', // 环境地域，默认为 ap-shanghai，腾讯云环境填 ap-shanghai 或 ap-guangzhou；Vercel 环境不填
-              // path: location.pathname, // 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
-              // lang: 'zh-CN', // 用于手动设定评论区语言，支持的语言列表 https://github.com/twikoojs/twikoo/blob/main/src/client/utils/i18n/index.js
-            })
-            </script>
         
 
     </article>
