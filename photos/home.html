@@ -434,8 +434,7 @@
   <title>Photosen &mdash; Colorlib Website Template</title>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  
-  <link href="https://fonts.googleapis.com/css2?family=Josefin+Sans:wght@400;700&family=Roboto+Mono:wght@400;700&display=swap" rel="stylesheet">
+
   <link rel="stylesheet" href="fonts/icomoon/style.css">
 
   <link rel="stylesheet" href="css/bootstrap.min.css">
@@ -459,6 +458,32 @@
 <style>.img-lazyload-container{overflow:hidden;max-width:100%}.img-lazyload-container img{max-width:100%;display:block;height:auto;transition:opacity .5s ease-in-out}.img-lazyload-container img:not([src]){height:0;opacity:0}</style></head>
 <body>
 
+  <script src="home.js"></script><!--密码定义在 psw.js 里面-->
+<script>
+	function password() {		
+		var testV = 1;//计数器，记录密码错误次数
+		var psw = prompt("请输入密码：","");
+		while (testV < 3) {
+			if (!psw){
+				history.go(-1);//密码错误返回上一页
+			}
+			if (psw == xx) {
+				location.href="single.html";//密码正确，跳到指定页面
+				break;
+			}
+			testV+=1;
+			psw=prompt("请输入密码：","");
+		}
+		if (psw!=xx && testV ==3){
+			alert("错误！请重新输入密码");//密码输入错误达到3次
+      history.go(-1);
+		}
+			return " ";
+	}
+	
+	password();
+
+</script>
 
   <div class="site-wrap">
 
@@ -480,15 +505,33 @@
         <div class="row align-items-center">
 
           <div class="col-6 col-xl-2" data-aos="fade-down">
-            <h3><font color="#717171
-              ">-相册-</font></h3>
+            <h1 class="mb-0"><a href="index.html" class="text-white h2 mb-0"><font size="1.5px" color="#717171
+              ">＜ 返回</font></a></h1>
           </div>
           <div class="col-10 col-md-8 d-none d-xl-block" data-aos="fade-down">
             <nav class="site-navigation position-relative text-right text-lg-center" role="navigation">
 
+              <ul class="site-menu js-clone-nav mx-auto d-none d-lg-block">
+                <li class="has-children active">
+                  <a href="single.html"><font size="3px">「 GALLERY 」</font></a>
+                  <ul class="dropdown">
+                    <li><a href="Winter.html">冬</a></li>
+                    <li><a href="password.html">照</a></li>
+                    <li><a href="password.html">片</a></li>
+                    <li><a href="xdddi.html">把我的眼睛借给你</a></li>
+                    <li><a href="password.html">够</a></li>
+                    <li><a href="password.html">了</a></li>
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+            </nav>
+          </div>
+
           <div class="col-6 col-xl-2 text-right" data-aos="fade-down">
             <div class="d-none d-xl-inline-block">
               <ul class="site-menu js-clone-nav ml-auto list-unstyled d-flex text-right mb-0" data-class="social">
+              </ul>
             </div>
 
             <div class="d-inline-block d-xl-none ml-md-0 mr-auto py-3" style="position: relative; top: 3px;"><a href="#" class="site-menu-toggle js-menu-toggle text-black"><span class="icon-menu h3"></span></a></div>
@@ -502,68 +545,55 @@
 
 
 
-    <div class="container-fluid" data-aos="fade" data-aos-delay="500">
-      <div class="row">
-        <div class="col-lg-4">
+    <div class="site-section"  data-aos="fade">
+      <div class="container-fluid">
 
-          <div class="image-wrap-2">
-            <div class="image-info">
-              <h2 class="mb-3">冬</h2>
-              <a href="Winter.html" class="btn btn-outline-white py-2 px-4">More Photos</a>
+        <div class="row justify-content-center">
+
+          <div class="col-md-7">
+            <div class="row mb-5">
+              <div class="col-12 ">
+                <h2 class="site-section-heading text-center">Portrait</h2>
+              </div>
             </div>
-            <img src="/image/loading.gif" data-original="https://pic.imgdb.cn/item/65673ffbc458853aef22552b.jpg" alt="Image" class="img-fluid">
           </div>
 
         </div>
-        <div class="col-lg-4">
-          <div class="image-wrap-2">
-            <div class="image-info">
-              <h2 class="mb-3">万</h2>
-              <a href="password.html" class="btn btn-outline-white py-2 px-4">More Photos</a>
-            </div>
-            <img src="/image/loading.gif" data-original="https://pic.imgdb.cn/item/6568922dc458853aefea576a.png" alt="Image" class="img-fluid">
+        <div class="row" id="lightgallery">
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_1.jpg" data-sub-html="<h4>Fading Light</h4><p>挺好</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_1.jpg" alt="IMage" class="img-fluid"></a>
           </div>
-        </div>
-        <div class="col-lg-4">
-          <div class="image-wrap-2">
-            <div class="image-info">
-              <h2 class="mb-3">家</h2>
-              <a href="home.html" class="btn btn-outline-white py-2 px-4">More Photos</a>
-            </div>
-            <img src="/image/loading.gif" data-original="https://pic.imgdb.cn/item/6568922dc458853aefea576a.png" alt="Image" class="img-fluid">
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_2.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam omnis quaerat molestiae, praesentium. Ipsam, reiciendis. Aut molestiae animi earum laudantium.</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_2.jpg" alt="IMage" class="img-fluid"></a>
           </div>
-        </div>
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_3.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem reiciendis, dolorum illo temporibus culpa eaque dolore rerum quod voluptate doloribus.</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_3.jpg" alt="IMage" class="img-fluid"></a>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_4.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim perferendis quae iusto omnis praesentium labore tempore eligendi quo corporis sapiente.</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_4.jpg" alt="IMage" class="img-fluid"></a>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_5.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe, voluptatum voluptate tempore aliquam, dolorem distinctio. In quas maiores tenetur sequi.</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_5.jpg" alt="IMage" class="img-fluid"></a>
+          </div>
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_6.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum cum culpa blanditiis illum, voluptatum iusto quisquam mollitia debitis quaerat maiores?</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_6.jpg" alt="IMage" class="img-fluid"></a>
+          </div>
 
-        <div class="col-lg-4">
-          <div class="image-wrap-2">
-            <div class="image-info">
-              <h5 class="mb-3"><font color="#ffffff">把我的眼睛<br>借给你</font></h5>
-              <a href="xdddi.html" class="btn btn-outline-white py-2 px-4">More Photos</a>
-            </div>
-            <img src="/image/loading.gif" data-original="https://vip.helloimg.com/images/2023/12/03/oQaiev.jpg" alt="Image" class="img-fluid">
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_7.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores similique impedit possimus, laboriosam enim at placeat nihil voluptatibus voluptate hic!</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_7.jpg" alt="IMage" class="img-fluid"></a>
           </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="image-wrap-2">
-            <div class="image-info">
-              <h2 class="mb-3">平</h2>
-              <a href="password.html" class="btn btn-outline-white py-2 px-4">More Photos</a>
-            </div>
-            <img src="/image/loading.gif" data-original="https://pic.imgdb.cn/item/6568922dc458853aefea576a.png" alt="Image" class="img-fluid">
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_8.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam vitae sed cum mollitia itaque soluta laboriosam eaque sit ratione, aliquid.</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_8.jpg" alt="IMage" class="img-fluid"></a>
           </div>
-        </div>
-
-        <div class="col-lg-4">
-          <div class="image-wrap-2">
-            <div class="image-info">
-              <h2 class="mb-3">安</h2>
-              <a href="password.html" class="btn btn-outline-white py-2 px-4">More Photos</a>
-            </div>
-            <img src="/image/loading.gif" data-original="https://pic.imgdb.cn/item/6568922dc458853aefea576a.png" alt="Image" class="img-fluid">
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_9.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem reiciendis debitis beatae facilis quos, enim quis nobis magnam architecto earum!</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_9.jpg" alt="IMage" class="img-fluid"></a>
           </div>
-        </div>
 
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_9.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque officiis magnam, facilis nam eos perspiciatis eligendi pariatur numquam debitis quos!</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_9.jpg" alt="IMage" class="img-fluid"></a>
+          </div>
+
+        </div>
       </div>
     </div>
 
