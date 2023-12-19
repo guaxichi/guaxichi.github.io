@@ -459,33 +459,6 @@
 <style>.img-lazyload-container{overflow:hidden;max-width:100%}.img-lazyload-container img{max-width:100%;display:block;height:auto;transition:opacity .5s ease-in-out}.img-lazyload-container img:not([src]){height:0;opacity:0}</style></head>
 <body>
 
-  <script src="home.js"></script><!--密码定义在 psw.js 里面-->
-<script>
-	function password() {		
-		var testV = 1;//计数器，记录密码错误次数
-		var psw = prompt("请输入密码：","");
-		while (testV < 3) {
-			if (!psw){
-				history.go(-1);//密码错误返回上一页
-			}
-			if (psw == xx) {
-				location.href="single.html";//密码正确，跳到指定页面
-				break;
-			}
-			testV+=1;
-			psw=prompt("请输入密码：","");
-		}
-		if (psw!=xx && testV ==3){
-			alert("错误！请重新输入密码");//密码输入错误达到3次
-      history.go(-1);
-		}
-			return " ";
-	}
-	
-	password();
-
-</script>
-
   <div class="site-wrap">
 
     <div class="site-mobile-menu">
@@ -517,11 +490,11 @@
                   <a href="single.html"><font size="3px">「 GALLERY 」</font></a>
                   <ul class="dropdown">
                     <li><a href="Winter.html">冬</a></li>
-                    <li><a href="password.html">照</a></li>
-                    <li><a href="password.html">片</a></li>
+                    <li><a href="password.html">万</a></li>
+                    <li><a href="password.html">家</a></li>
                     <li><a href="xdddi.html">把我的眼睛借给你</a></li>
-                    <li><a href="password.html">够</a></li>
-                    <li><a href="password.html">了</a></li>
+                    <li><a href="password.html">平</a></li>
+                    <li><a href="password.html">安</a></li>
                     </li>
                   </ul>
                 </li>
@@ -554,46 +527,20 @@
           <div class="col-md-7">
             <div class="row mb-5">
               <div class="col-12 ">
-                <h2 class="site-section-heading text-center">Portrait</h2>
+                <h2 class="site-section-heading text-center">Family</h2>
               </div>
             </div>
           </div>
 
         </div>
         <div class="row" id="lightgallery">
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_1.jpg" data-sub-html="<h4>Fading Light</h4><p>挺好</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_1.jpg" alt="IMage" class="img-fluid"></a>
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="https://pic.imgdb.cn/item/6580b1afc458853aef8153ac.jpg" data-sub-html="<h4>弟弟与奶奶</h4><p>挺好</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="https://pic.imgdb.cn/item/6580aecac458853aef7eedb3.jpg" alt="IMage" class="img-fluid"></a>
           </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_2.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Laboriosam omnis quaerat molestiae, praesentium. Ipsam, reiciendis. Aut molestiae animi earum laudantium.</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_2.jpg" alt="IMage" class="img-fluid"></a>
+          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="https://pic.imgdb.cn/item/6580b1d2c458853aef816ea4.jpg" data-sub-html="<h4>弟弟</h4><p>你叫余华是吧？</p>">
+            <a href="#"><img src="/image/loading.gif" data-original="https://pic.imgdb.cn/item/6580afb4c458853aef7fab5b.jpg" alt="IMage" class="img-fluid"></a>
           </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_3.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem reiciendis, dolorum illo temporibus culpa eaque dolore rerum quod voluptate doloribus.</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_3.jpg" alt="IMage" class="img-fluid"></a>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_4.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Enim perferendis quae iusto omnis praesentium labore tempore eligendi quo corporis sapiente.</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_4.jpg" alt="IMage" class="img-fluid"></a>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_5.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Saepe, voluptatum voluptate tempore aliquam, dolorem distinctio. In quas maiores tenetur sequi.</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_5.jpg" alt="IMage" class="img-fluid"></a>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_6.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Rerum cum culpa blanditiis illum, voluptatum iusto quisquam mollitia debitis quaerat maiores?</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_6.jpg" alt="IMage" class="img-fluid"></a>
-          </div>
-
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_7.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Asperiores similique impedit possimus, laboriosam enim at placeat nihil voluptatibus voluptate hic!</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_7.jpg" alt="IMage" class="img-fluid"></a>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_8.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam vitae sed cum mollitia itaque soluta laboriosam eaque sit ratione, aliquid.</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_8.jpg" alt="IMage" class="img-fluid"></a>
-          </div>
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_9.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quidem reiciendis debitis beatae facilis quos, enim quis nobis magnam architecto earum!</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_9.jpg" alt="IMage" class="img-fluid"></a>
-          </div>
-
-          <div class="col-sm-6 col-md-4 col-lg-3 col-xl-3 item" data-aos="fade" data-src="images/big-images/nature_big_9.jpg" data-sub-html="<h4>Fading Light</h4><p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Itaque officiis magnam, facilis nam eos perspiciatis eligendi pariatur numquam debitis quos!</p>">
-            <a href="#"><img src="/image/loading.gif" data-original="images/nature_small_9.jpg" alt="IMage" class="img-fluid"></a>
-          </div>
-
+          
         </div>
       </div>
     </div>
