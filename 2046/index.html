@@ -1,0 +1,1710 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head><!-- hexo injector head_begin start --><style type="text/css">.douban-card-block {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    max-height: 400px;
+}
+
+.douban-card {
+    display: flex;
+    margin: 30px 10px;
+    padding: 15px;
+    border-radius: 15px;
+    position: relative;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    color: antiquewhite;
+    text-decoration: none;
+}
+
+.douban-card:hover {
+    text-decoration: none;
+}
+
+.douban-card-bgimg {
+    position: absolute;
+    width: 115%;
+    height: 115%;
+    filter: blur(15px) brightness(0.6);
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.douban-card-img {
+    position: relative;
+    height: 130px;
+    width: 80px;
+    background-size: 100%;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+.douban-card-left:hover .douban-card-img {
+    filter: blur(5px) brightness(0.6);
+    transform: perspective(800px) rotateX(180deg);
+}
+
+.douban-card-left .douban-card-img {
+    transition: all 500ms ease;
+}
+
+.douban-card-left {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.douban-card-left .douban-card-status {
+    height: 130px;
+    width: 80px;
+    text-align: center;
+    font-weight: bold;
+    position: absolute;
+    left: 0;
+    top: 30%;
+    transform: rotateX(180deg);
+    backface-visibility: hidden;
+    transition: all 500ms ease;
+}
+
+.douban-card-left:hover .douban-card-status {
+    transform: perspective(800px) rotateX(0deg);
+}
+
+.douban-card-right {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    margin-left: 12px;
+    font-size: 16px;
+    font-family: "Courier New", Courier, monospace;
+    line-height: 1.3;
+    color: antiquewhite;
+}
+
+.douban-card-item {
+    margin-top: 4px;
+}
+</style><!-- hexo injector head_begin end -->
+    <meta charset="UTF-8">
+<meta name="viewport"
+      content="width=device-width, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="author" content="果果">
+
+
+
+
+
+<title>思果矣</title>
+
+
+
+    <link rel="icon" href="/xigua.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+    <script src="/js/jquery.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+<!-- 搜索的部分 -->
+
+
+
+    <script>
+    // function searchToggle() {
+    //     const width = $(document.body).width()
+    //     if(width > 479) {
+    //         return;
+    //     }
+    //     const search = $('.search');
+    //     const searchForm = $('.form-search')
+
+    //     if(!search.hasClass("mobile-search")) {
+    //         search.addClass("mobile-search");
+    //     } else {
+    //         search.removeClass("mobile-search");
+    //     } 
+    // }
+
+    function searchToggle() {
+        const width = $(document.body).width()
+        if(width > 479) {
+            return;
+        }
+        const search = $('.search');
+        const searchForm = $('.form-search');
+        const menuToggle = $('.menu-toggle');
+        const title = $('.navbar-header-title ');
+
+        if(!search.hasClass("mobile-search")) {
+            search.addClass("mobile-search");
+            menuToggle.addClass("open-search")
+            title.addClass("mobile-title-hidden")
+        } else {
+            search.removeClass("mobile-search");
+            menuToggle.removeClass("open-search")
+            // title.css({visibility: 'visible'})
+            title.removeClass("mobile-title-hidden")
+        } 
+    }
+
+
+
+    function search(searchInputEl, formEl, flag) {
+        const path = "/" + "search.json"; // 可以在public 下查看这个search.json
+        $(formEl).submit(function(e){
+            e.preventDefault();
+            let target = null
+            if(searchInputEl == null) {
+                const screenWidth = $(document.body).width();
+                target = screenWidth > 479 ? $('#pc-search-input') : $('#mobile-search-input');
+                console.log(target);
+            } else {
+                target = $(searchInputEl)
+            }
+
+            if(!flag && target.val() === '') {
+                return ;
+            }
+
+            $("#u-search").fadeIn(500, function() {
+                $("body > .wrapper").addClass("modal-active");
+
+                $.ajax({
+                    url: path,
+                    dataType: "json",
+                    beforeSend: function (xhr) {
+                        $input = target.val();
+                        $(".form-input").val($input);
+                        const loadingBar = $('.search-loading-bar') 
+                        loadingBar.css({
+                            width:'100%',
+                            display: 'block'
+                        });
+                    },
+                    success: function( datas ) {
+                        console.log(datas);
+                        const $resultPanel = $(".modal-body")[0];
+                        let str = `<ul class="modal-results">`;
+                        var keywords = $(".form-input").val().trim().toLowerCase().split(/[\s\-]+/);
+                        $resultPanel.innerHTML = "";
+                        let hasResult = false
+                        let text = `<div class="no-result">找不到与关键词相关的内容....</div>`;
+
+                        if ($(".form-input").val().trim().length <= 0) {
+                            // 没有结果
+                            $resultPanel.innerHTML = text;
+                            return;
+                        }
+                        datas.forEach(function (data, index) {
+                            var isMatch = true;
+                            if (!data.title || data.title.trim() === '') {
+                                data.title = "Untitled";
+                            }
+                            var data_title = data.title.trim().toLowerCase();
+                            var data_content = data.content && data.content.trim().replace(/<[^>]+>/g, "").toLowerCase() || '';
+                            var data_url = data.url;
+                            var index_title = -1;
+                            var index_content = -1;
+                            var first_occur = -1;
+                            // only match artiles with not empty contents
+                            if (data_content !== '') {
+                                keywords.forEach(function (keyword, i) {
+                                    index_title = data_title.indexOf(keyword);
+                                    index_content = data_content.indexOf(keyword);
+
+                                    if (index_title < 0 && index_content < 0) {
+                                        isMatch = false;
+                                    } else {
+                                        hasResult = true
+                                        if (index_content < 0) {
+                                            index_content = 0;
+                                        }
+                                        if (i == 0) {
+                                            first_occur = index_content;
+                                        }
+                                    }
+                                });
+                            } else {
+                                isMatch = false;
+                            }
+                            // show search results
+                            if (isMatch) {
+                                str += `<li class='result-item'><a href='${data_url}' class='result-item-detail'> <span class="title">${data_title}</span>`;
+                                var content = data.content.trim().replace(/<[^>]+>/g, "");
+                                if (first_occur >= 0) {
+                                    // cut out 200 characters
+                                    var start = first_occur - 40;
+                                    var end = first_occur + 160;
+
+                                    if (start < 0) {
+                                        start = 0;
+                                    }
+
+                                    if (start == 0) {
+                                        end = 200;
+                                    }
+
+                                    if (end > content.length) {
+                                        end = content.length;
+                                    }
+
+                                    var match_content = content.substring(start, end);
+
+                                    // highlight all keywords
+                                    keywords.forEach(function (keyword) {
+                                        var regS = new RegExp(keyword, "gi");
+                                        match_content = match_content.replace(regS, `<em class="search-keyword">${keyword}</em>`);
+                                    });
+
+                                    str += `<span class="content"> ${match_content} ...</span></a>`;
+                                }
+                                str += "</li>";
+                            }
+                        });
+                        str += "</ul>";
+                        if(hasResult) {
+                            $resultPanel.innerHTML = str;
+                        } else {
+                            $resultPanel.innerHTML = text;
+                        }
+
+                    },
+                    complete: function() {
+                        setTimeout(() => {
+                                const loadingBar = $('.search-loading-bar') 
+                                loadingBar.css({
+                                    width:'0%',
+                                    display: 'none'
+                                });
+                        }, 300)
+                    }
+                });
+            })
+
+        });
+    }
+
+    $(document).ready(function() {
+        $('.modal-close').click(function () { 
+            $("#u-search").fadeOut();
+            $("body > .wrapper").removeClass("modal-active")
+        })
+
+        $('.modal-overlay').click(function() {
+            $("#u-search").fadeOut();
+            $("body > .wrapper").removeClass("modal-active")
+        })
+        search(null, ".form-search", false)
+        search("#u-search-modal-form .form-input", ".u-search-modal-form", true)
+    })
+</script>
+
+
+<script async src="https://umami.togu.top/6a5f0616-0508-098a-5f3a-648b85e4927a" data-website-id="e369ca7f-b999-444d-b59e-69274c875618"></script>
+<meta name="generator" content="Hexo 6.3.0"><link rel="alternate" href="/atom.xml" title="思果矣" type="application/atom+xml">
+</head>
+
+<body>
+
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">思果矣</a></div>
+            <div class="menu navbar-right">
+                <!-- 这里表示的是pc端搜索框 -->
+                
+                
+    <div class="search ">
+        <div class="search-btn" onClick="searchToggle()">
+            <img src="/image/search.png" class="search-btn-img" />
+        </div>
+        <form class="form-search">
+            <input class="input" placeholder="点此搜索" autocomplete="off" id="pc-search-input"/>
+        </form>
+    </div>
+
+                
+                    <a class="menu-item" href="/archives">博文</a>
+                
+                    <a class="menu-item" href="/category">类别</a>
+                
+                    <a class="menu-item" href="/shuoshuo">废言</a>
+                
+                    <a class="menu-item" href="/about">关于</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+    <div class="container">
+        <div class="navbar-header">
+            <div>
+                <a href="/">思果矣</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+            </div>
+            <div class="navbar-mobile-right">
+                
+                
+    <div class="search ">
+        <div class="search-btn" onClick="searchToggle()">
+            <img src="/image/search.png" class="search-btn-img" />
+        </div>
+        <form class="form-search">
+            <input class="input" placeholder="点此搜索" autocomplete="off" id="mobile-search-input"/>
+        </form>
+    </div>
+
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; 目录</div>
+            </div>
+
+        </div>
+        <div class="menu" id="mobile-menu">
+            
+            <a class="menu-item" href="/archives">博文</a>
+            
+            <a class="menu-item" href="/category">类别</a>
+            
+            <a class="menu-item" href="/shuoshuo">废言</a>
+            
+            <a class="menu-item" href="/about">关于</a>
+            
+        </div>
+    </div>
+</nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+            <div class="main">
+                <div class="container">
+    <article class="post-wrap page">
+        
+        <h2 class="post-title"></h2>
+        
+        <section class="post-content">
+            <!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8">
+		<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,user-scalable=0">
+		<title>摸鱼小游戏 | 2048 | 海拥</title>
+		<meta name="keywords" content="游戏" />
+		<meta name="description" content="游戏 | 2048小游戏作者立志打造一个拥有100个小游戏的摸鱼网站，made by  Haiyong，技术支持海拥"/> 
+		<meta name="author" content="海拥(https://haiyong.site/moyu)" />
+		<meta name="copyright" content="海拥(https://haiyong.site/moyu)" />
+		<link rel="icon" href="https://haiyong.site/img/favicon.png" sizes="192x192" />
+		<style>
+			html,
+			body,
+			div,
+			span,
+			applet,
+			object,
+			iframe,
+			h1,
+			h2,
+			h3,
+			h4,
+			h5,
+			h6,
+			p,
+			blockquote,
+			pre,
+			a,
+			abbr,
+			acronym,
+			address,
+			big,
+			cite,
+			code,
+			del,
+			dfn,
+			em,
+			img,
+			ins,
+			kbd,
+			q,
+			s,
+			samp,
+			small,
+			strike,
+			strong,
+			sub,
+			sup,
+			tt,
+			var,
+			b,
+			u,
+			i,
+			center,
+			dl,
+			dt,
+			dd,
+			ol,
+			ul,
+			li,
+			fieldset,
+			form,
+			label,
+			legend,
+			table,
+			caption,
+			tbody,
+			tfoot,
+			thead,
+			tr,
+			th,
+			td,
+			article,
+			aside,
+			canvas,
+			details,
+			embed,
+			figure,
+			figcaption,
+			footer,
+			header,
+			hgroup,
+			menu,
+			nav,
+			output,
+			ruby,
+			section,
+			summary,
+			time,
+			mark,
+			audio,
+			video {
+				margin: 0;
+				padding: 0;
+				border: 0;
+				font-size: 100%;
+				font: inherit;
+				vertical-align: baseline
+			}
+
+			article,
+			aside,
+			details,
+			figcaption,
+			figure,
+			footer,
+			header,
+			hgroup,
+			menu,
+			nav,
+			section {
+				display: block
+			}
+
+			body {
+				line-height: 1
+			}
+
+			ol,
+			ul {
+				list-style: none
+			}
+
+			blockquote,
+			q {
+				quotes: none
+			}
+
+			blockquote:before,
+			blockquote:after,
+			q:before,
+			q:after {
+				content: '';
+				content: none
+			}
+
+			table {
+				border-collapse: collapse;
+				border-spacing: 0
+			}
+
+			@charset "UTF-8";
+			@import url("https://fonts.googleapis.com/css?family=Arvo");
+
+			* {
+				box-sizing: border-box;
+			}
+
+			a {
+				color: #1B9AAA;
+				text-decoration: none;
+				border-bottom: 1px solid currentColor;
+			}
+
+			a:hover {
+				color: #14727e;
+			}
+
+			a:focus,
+			a:active {
+				color: #0d4a52;
+			}
+
+			body,
+			html {
+				position: relative;
+				width: 100%;
+				height: 100%;
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-orient: vertical;
+				-webkit-box-direction: normal;
+				-ms-flex-direction: column;
+				flex-direction: column;
+				font-family: "Arvo", Helvetica, sans-serif;
+				font-family: 12px;
+				color: #555;
+				background: #F8FFE5;
+			}
+
+			strong {
+				font-weight: bold;
+			}
+
+			p {
+				line-height: 1.6;
+				font-size: 16px;
+			}
+			@media screen and (max-width:400px) {
+			  .haiyong{
+			  	font-size: 12px;
+			  }
+			} 
+			
+			.inspired {
+				margin-top: 1em;
+				font-size: 0.9rem;
+				color: #9a9a95;
+			}
+
+			header {
+				color: #F8FFE5;
+				text-align: center;
+			}
+
+			header span {
+				display: inline-block;
+				box-sizing: border-box;
+				width: 4rem;
+				height: 4rem;
+				line-height: 4rem;
+				margin: 0 0.4rem;
+				background: #FFC43D;
+			}
+			@media screen and (max-width:440px) {
+			  header span {
+			  	width: 3rem;
+			  	height: 3rem;
+			  	line-height: 3rem;
+			  }
+			}
+			@media screen and (max-width:375px) {
+			  header span {
+			  	width: 2.5rem;
+			  	height: 2.5rem;
+			  	line-height: 2.5rem;
+			  }
+			}
+
+			header span:nth-of-type(2) {
+				background: #EF476F;
+			}
+
+			header span:nth-of-type(3) {
+				background: #1B9AAA;
+			}
+
+			header span:nth-of-type(4) {
+				background: #06D6A0;
+			}
+
+			h1 {
+				font-size: 2.2rem;
+			}
+
+			.directions {
+				padding: 2rem;
+				border-top: 1px solid #9a9a95;
+				border-bottom: 1px solid #9a9a95;
+			}
+			@media screen and (max-width:440px) {
+				.directions{
+					padding: 1rem;
+					
+				}
+			}
+			.container {
+				margin: 0 auto;
+				padding-bottom: 3.5rem;
+				-webkit-box-flex: 1;
+				-ms-flex: 1;
+				flex: 1;
+				width: 100%;
+				max-width: 550px;
+				text-align: center;
+			}
+
+			header .container {
+				padding: 0;
+				padding: 2rem 4rem;
+				max-width: 900px;
+			}
+			@media screen and (max-width:440px) {
+				header .container {
+					padding: 1rem 2rem;
+				}
+			}
+			.scores {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+			}
+
+			.score-container {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+				margin: 0.8rem;
+				font-size: 1.2rem;
+				line-height: 1;
+				color: #555;
+			}
+
+			.score-container.best-score {
+				color: #9a9a95;
+			}
+
+			.score {
+				margin-left: 1rem;
+				position: relative;
+				font-weight: bold;
+				font-size: 1.5rem;
+				vertical-align: middle;
+				text-align: right;
+			}
+
+			.game {
+				position: relative;
+				margin: 0 auto;
+				background: #9a9a95;
+				padding: 7px;
+				display: inline-block;
+				border-radius: 3px;
+				box-sizing: border-box;
+			}
+
+			.tile-container {
+				border-radius: 6px;
+				position: relative;
+				width: 270px;
+				height: 270px;
+			}
+
+			.tile,
+			.background {
+				display: block;
+				color: #F8FFE5;
+				position: absolute;
+				width: 67.5px;
+				height: 67.5px;
+				box-sizing: border-box;
+				text-align: center;
+			}
+
+			.background {
+				z-index: 1;
+				text-align: center;
+				border: 5px solid #9a9a95;
+				background-color: #F8FFE5;
+			}
+
+			.tile {
+				opacity: 0;
+				z-index: 2;
+				background: #FFC43D;
+				color: #F8FFE5;
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+				font-size: 1.8rem;
+				align-items: center;
+				-webkit-transition: 110ms ease-in-out;
+				transition: 110ms ease-in-out;
+				border-radius: 3px;
+				border: 7px solid #9a9a95;
+				box-sizing: border-box;
+			}
+
+			.tile--4 {
+				background: #EF476F;
+				color: #F8FFE5;
+			}
+
+			.tile--8 {
+				background: #1B9AAA;
+				color: #F8FFE5;
+			}
+
+			.tile--16 {
+				background: #06D6A0;
+				color: #F8FFE5;
+			}
+
+			.tile--32 {
+				background: #f37694;
+				color: #F8FFE5;
+			}
+
+			.tile--64 {
+				background: #22c2d6;
+				color: #F8FFE5;
+			}
+
+			.tile--128 {
+				background: #17f8be;
+				color: #F8FFE5;
+			}
+
+			.tile--256 {
+				background: #ffd470;
+				color: #F8FFE5;
+			}
+
+			.tile--512 {
+				background: #eb184a;
+				color: #F8FFE5;
+			}
+
+			.tile--1024 {
+				background: #14727e;
+				color: #F8FFE5;
+			}
+
+			.tile--2048 {
+				background: #05a47b;
+				color: #F8FFE5;
+			}
+
+			.tile--pop {
+				-webkit-animation: pop 0.3s ease-in-out;
+				animation: pop 0.3s ease-in-out;
+				-webkit-animation-fill-mode: forwards;
+				animation-fill-mode: forwards;
+			}
+
+			.tile--shrink {
+				-webkit-animation: shrink 0.5s ease-in-out;
+				animation: shrink 0.5s ease-in-out;
+				-webkit-animation-fill-mode: forwards;
+				animation-fill-mode: forwards;
+			}
+
+			.add {
+				position: absolute;
+				opacity: 0;
+				left: 120%;
+				top: 0;
+				font-size: 1rem;
+				color: #1B9AAA;
+			}
+
+			.add.active {
+				-webkit-animation: add 0.8s ease-in-out;
+				animation: add 0.8s ease-in-out;
+			}
+
+			@-webkit-keyframes add {
+				0% {
+					opacity: 1;
+					top: 0;
+				}
+
+				100% {
+					opacity: 0;
+					top: -100%;
+				}
+			}
+
+			@keyframes add {
+				0% {
+					opacity: 1;
+					top: 0;
+				}
+
+				100% {
+					opacity: 0;
+					top: -100%;
+				}
+			}
+
+			@-webkit-keyframes pop {
+				0% {
+					-webkit-transform: scale(0.5);
+					transform: scale(0.5);
+					opacity: 0;
+				}
+
+				90% {
+					-webkit-transform: scale(1.1);
+					transform: scale(1.1);
+					opacity: 1;
+				}
+
+				100% {
+					-webkit-transform: scale(1);
+					transform: scale(1);
+					opacity: 1;
+				}
+			}
+
+			@keyframes pop {
+				0% {
+					-webkit-transform: scale(0.5);
+					transform: scale(0.5);
+					opacity: 0;
+				}
+
+				90% {
+					-webkit-transform: scale(1.1);
+					transform: scale(1.1);
+					opacity: 1;
+				}
+
+				100% {
+					-webkit-transform: scale(1);
+					transform: scale(1);
+					opacity: 1;
+				}
+			}
+
+			@-webkit-keyframes shrink {
+				0% {
+					-webkit-transform: scale(1);
+					transform: scale(1);
+					opacity: 1;
+				}
+
+				100% {
+					-webkit-transform: scale(0.9);
+					transform: scale(0.9);
+					opacity: 0.9;
+				}
+			}
+
+			@keyframes shrink {
+				0% {
+					-webkit-transform: scale(1);
+					transform: scale(1);
+					opacity: 1;
+				}
+
+				100% {
+					-webkit-transform: scale(0.9);
+					transform: scale(0.9);
+					opacity: 0.9;
+				}
+			}
+
+			.end {
+				opacity: 0;
+				position: absolute;
+				top: 0;
+				left: 0;
+				width: 100%;
+				height: 100%;
+				z-index: -1;
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-orient: vertical;
+				-webkit-box-direction: normal;
+				-ms-flex-direction: column;
+				flex-direction: column;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+				background: rgba(85, 85, 85, 0.9);
+				color: white;
+				font-size: 2rem;
+				-webkit-transition: opacity 0.3s ease-in-out;
+				transition: opacity 0.3s ease-in-out;
+			}
+
+			.end btn {
+				margin-top: 1rem;
+			}
+
+			.end.active {
+				opacity: 1;
+				z-index: 1000;
+			}
+
+			.monkey {
+				font-size: 3rem;
+				margin: 1rem 0;
+			}
+
+			.btn {
+				font-family: inherit;
+				font-size: 1rem;
+				border: none;
+				background: #1B9AAA;
+				letter-spacing: 1px;
+				color: white;
+				font-weight: 300;
+				padding: 0.9em 1.5em;
+				border-radius: 3px;
+				border: 1px solid transparent;
+				cursor: pointer;
+			}
+
+			.btn:hover {
+				background-color: #14727e;
+			}
+
+			.btn:active {
+				background-color: #0d4a52;
+			}
+
+			.btn:focus {
+				box-shadow: 0 0 10px #0d4a52 inset;
+				outline: none;
+			}
+
+			.not-recommended {
+				display: -webkit-box;
+				display: -ms-flexbox;
+				display: flex;
+				-webkit-box-pack: center;
+				-ms-flex-pack: center;
+				justify-content: center;
+				-webkit-box-align: center;
+				-ms-flex-align: center;
+				align-items: center;
+				margin-top: 0.8rem;
+			}
+			.not-recommended *+* {
+				margin-left: 10px;
+			}
+
+			.not-recommended__item+.not-recommended__annotation:before {
+				font-size: 30px;
+				content: "😐";
+			}
+
+			.not-recommended__item:hover+.not-recommended__annotation:before {
+				content: "😟";
+			}
+
+			.not-recommended__item:focus+.not-recommended__annotation:before {
+				content: "😄";
+			}
+
+			.not-recommended__item:active+.not-recommended__annotation:before {
+				content: "😨";
+			}
+			footer {
+			  background-color: #158ca5;
+			  bottom: 0;
+			  box-shadow: 0px 0px 10px 5px rgba(0, 0, 0, 0.5);
+			  color: white;
+			  display: flex;
+			  justify-content: space-around;
+			  left: 0;
+			  padding: 15px;
+			  position: fixed;
+			  right: 0;
+			}
+			footer a {
+			  color: white;
+			}
+			footer .center {
+			  justify-content: center;
+			}
+			.page-footer {
+			  position: fixed;
+			  right: 35px;
+			  bottom: 20px;
+			  display: flex;
+			  align-items: center;
+			  padding: 5px;
+			  color: black;
+			  background: rgba(255, 255, 255, 0.65);
+			}
+			
+			.page-footer a {
+			  display: flex;
+			  margin-left: 4px;
+			}
+			.touxiang{
+				bottom: 0px;
+				width:30px;
+				height:30px;
+			}
+			
+		</style>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?5c0509be37c769a1a59e515a0f0c337f";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+	<style>.img-lazyload-container{overflow:hidden;max-width:100%}.img-lazyload-container img{max-width:100%;display:block;height:auto;transition:opacity .5s ease-in-out}.img-lazyload-container img:not([src]){height:0;opacity:0}</style></head>
+
+	<body>
+
+		<header>
+			<div class="container">
+				<h1><span>2</span><span>0</span><span>4</span><span>8</span></h1>
+				<p class="inspired">by <a href="https://blog.csdn.net/qq_44273429" target="_blank">海拥✘</a></p>
+			</div>
+		</header>
+
+		<div class="container">
+			<div class="directions">
+				<p id="haiyong" class="haiyong"><strong>如何玩：</strong> 使用键盘方向键键移动数字方块。相邻的两个方块数字相同，它们可合并成一个！</p>
+			</div>
+			<div class="scores">
+				<div class="score-container best-score">
+					历史最佳:
+					<div class="score">
+						<div id="bestScore">0</div>
+					</div>
+				</div>
+				<div class="score-container">
+					分数:
+					<div class="score">
+						<div id="score">0</div>
+						<div class="add" id="add"></div>
+					</div>
+				</div>
+			</div>
+			<div class="game">
+				<div id="tile-container" class="tile-container"></div>
+				<div class="end" id="end">游戏结束<div class="monkey">🙈</div><button class="btn not-recommended__item js-restart-btn"
+					 id="try-again">再试一次</button></div>
+			</div>
+
+			<div class="not-recommended">
+				<button class="btn not-recommended__item js-restart-btn" id="restart">重新启动游戏</button>
+				<span class="not-recommended__annotation"></span>
+			</div>
+			<footer>
+			  <span class="author">Created by <a target="_blank" rel="noopener" href="https://haiyong.site/about">Haiyong</a></span>
+					
+			  <span class="center">2048</span>
+					
+			  <span class="opposite">更多游戏:<a target="_blank" rel="noopener" href="https://haiyong.site/moyu">摸鱼</a></span>
+			</footer>
+
+		</div>
+
+		<script>
+			'use strict';
+			
+			var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+			
+			var game = null;
+			var bestScore = 0;
+			var scoreDiv = document.getElementById('score');
+			var bestScoreDiv = document.getElementById('bestScore');
+			var addDiv = document.getElementById('add');
+			var endDiv = document.getElementById('end');
+			var size = 4;
+			var nextId = 1;
+			var score = 0;
+			
+			function initGame() {
+			  game = Array(size * size).fill(null); // 4 x 4 grid, represented as an array
+			  initBestScore();
+			}
+			
+			function initBestScore() {
+			  bestScore = localStorage.getItem('bestScore') || 0;
+			  bestScoreDiv.innerHTML = bestScore;
+			}
+			
+			function updateDOM(before, after) {
+			  var newElements = getNewElementsDOM(before, after);
+			  var existingElements = getExistingElementsDOM(before, after);
+			  var mergedTiles = getMergedTiles(after);
+			  removeElements(mergedTiles);
+			  drawGame(newElements, true);
+			  drawGame(existingElements);
+			}
+			
+			function removeElements(mergedTiles) {
+			  for (var _iterator = mergedTiles, _isArray = Array.isArray(_iterator), _i = 0, _iterator = _isArray ? _iterator : _iterator[Symbol.iterator]();;) {
+			    var _ref;
+			
+			    if (_isArray) {
+			      if (_i >= _iterator.length) break;
+			      _ref = _iterator[_i++];
+			    } else {
+			      _i = _iterator.next();
+			      if (_i.done) break;
+			      _ref = _i.value;
+			    }
+			
+			    var tile = _ref;
+			
+			    var _loop = function _loop() {
+			      if (_isArray2) {
+			        if (_i2 >= _iterator2.length) return 'break';
+			        _ref2 = _iterator2[_i2++];
+			      } else {
+			        _i2 = _iterator2.next();
+			        if (_i2.done) return 'break';
+			        _ref2 = _i2.value;
+			      }
+			
+			      var id = _ref2;
+			
+			      var currentElm = document.getElementById(id);
+			      positionTile(tile, currentElm);
+			      currentElm.classList.add('tile--shrink');
+			      setTimeout(function () {
+			        currentElm.remove();
+			      }, 100);
+			    };
+			
+			    for (var _iterator2 = tile.mergedIds, _isArray2 = Array.isArray(_iterator2), _i2 = 0, _iterator2 = _isArray2 ? _iterator2 : _iterator2[Symbol.iterator]();;) {
+			      var _ref2;
+			
+			      var _ret = _loop();
+			
+			      if (_ret === 'break') break;
+			    }
+			  }
+			}
+			
+			function getMergedTiles(after) {
+			  return after.filter(function (tile) {
+			    return tile && tile.mergedIds;
+			  });
+			}
+			
+			function getNewElementsDOM(before, after) {
+			  var beforeIds = before.filter(function (tile) {
+			    return tile;
+			  }).map(function (tile) {
+			    return tile.id;
+			  });
+			  var newElements = after.filter(function (tile) {
+			    return tile && beforeIds.indexOf(tile.id) === -1;
+			  });
+			  return newElements;
+			}
+			
+			function getExistingElementsDOM(before, after) {
+			  var beforeIds = before.filter(function (tile) {
+			    return tile;
+			  }).map(function (tile) {
+			    return tile.id;
+			  });
+			  var existingElements = after.filter(function (tile) {
+			    return tile && beforeIds.indexOf(tile.id) !== -1;
+			  });
+			  return existingElements;
+			}
+			
+			function drawBackground() {
+			  var tileContainer = document.getElementById('tile-container');
+			  tileContainer.innerHTML = '';
+			  for (var i = 0; i < game.length; i++) {
+			    var tile = game[i];
+			    var tileDiv = document.createElement('div');
+			    var x = i % size;
+			    var y = Math.floor(i / size);
+			    tileDiv.style.top = y * 67.5 + 'px';
+			    tileDiv.style.left = x * 67.5 + 'px';
+			
+			    tileDiv.classList.add("background");
+			    tileContainer.appendChild(tileDiv);
+			  }
+			}
+			
+			function positionTile(tile, elm) {
+			  var x = tile.index % size;
+			  var y = Math.floor(tile.index / size);
+			  elm.style.top = y * 67.5 + 'px';
+			  elm.style.left = x * 67.5 + 'px';
+			}
+			
+			function drawGame(tiles, isNew) {
+			  var tileContainer = document.getElementById('tile-container');
+			  for (var i = 0; i < tiles.length; i++) {
+			    var tile = tiles[i];
+			    if (tile) {
+			      if (isNew) {
+			        (function () {
+			          var tileDiv = document.createElement('div');
+			          positionTile(tile, tileDiv);
+			          tileDiv.classList.add('tile', 'tile--' + tile.value);
+			          tileDiv.id = tile.id;
+			          setTimeout(function () {
+			            tileDiv.classList.add("tile--pop");
+			          }, tile.mergedIds ? 1 : 150);
+			          tileDiv.innerHTML = '<p>' + tile.value + '</p>';
+			          tileContainer.appendChild(tileDiv);
+			        })();
+			      } else {
+			        var currentElement = document.getElementById(tile.id);
+			        positionTile(tile, currentElement);
+			      }
+			    }
+			  }
+			}
+			
+			function gameOver() {
+			  if (game.filter(function (number) {
+			    return number === null;
+			  }).length === 0) {
+			    var sameNeighbors = game.find(function (tile, i) {
+			      var isRightSame = game[i + 1] && (i + 1) % 4 !== 0 ? tile.value === game[i + 1].value : false;
+			      var isDownSame = game[i + 4] ? tile.value === game[i + 4].value : false;
+			      if (isRightSame || isDownSame) {
+			        return true;
+			      }
+			      return false;
+			    });
+			    return !sameNeighbors;
+			  }
+			}
+			
+			function generateNewNumber() {
+			  // 0.9 probability of 2, 0.1 probability of 4
+			  var p = Math.random() * 100;
+			  return p <= 90 ? 2 : 4;
+			}
+			
+			function addRandomNumber() {
+			  // Adds either a 2 or a 4 to an empty position in the game array
+			  var emptyCells = game.map(function (_, index) {
+			    return index;
+			  }).filter(function (index) {
+			    return game[index] === null;
+			  });
+			  if (emptyCells.length === 0) {
+			    return;
+			  }
+			  var newPos = emptyCells[Math.floor(Math.random() * emptyCells.length)];
+			  var newObj = {
+			    id: nextId++,
+			    index: newPos,
+			    value: generateNewNumber()
+			  };
+			  game.splice(newPos, 1, newObj);
+			}
+			
+			function getIndexForPoint(x, y) {
+			  return y * size + x;
+			}
+			
+			function reflectGrid(grid) {
+			  var reflectedGame = Array(size * size).fill(0);
+			  for (var row = 0; row < size; row++) {
+			    for (var col = 0; col < size; col++) {
+			      var index1 = getIndexForPoint(col, row);
+			      var index2 = getIndexForPoint(size - col - 1, row);
+			      reflectedGame[index1] = grid[index2];
+			    }
+			  }
+			  return reflectedGame;
+			}
+			
+			function rotateLeft90Deg(grid) {
+			  var rotatedGame = Array(size * size).fill(0);
+			  for (var row = 0; row < size; row++) {
+			    for (var col = 0; col < size; col++) {
+			      var index1 = getIndexForPoint(col, row);
+			      var index2 = getIndexForPoint(size - 1 - row, col);
+			      rotatedGame[index1] = grid[index2];
+			    }
+			  }
+			  return rotatedGame;
+			}
+			
+			function rotateRight90Deg(grid) {
+			  var rotatedGame = Array(size * size).fill(0);
+			  for (var row = 0; row < size; row++) {
+			    for (var col = 0; col < size; col++) {
+			      var index1 = getIndexForPoint(col, row);
+			      var index2 = getIndexForPoint(row, size - 1 - col);
+			      rotatedGame[index1] = grid[index2];
+			    }
+			  }
+			  return rotatedGame;
+			}
+			
+			/*
+			For any cell whose neighbor to the right is empty, move that cell
+			to the right. For any cell whose neighbor to the right is equal
+			to the same value, combine the values together (e.g. 2+2 = 4)
+			*/
+			function shiftGameRight(gameGrid) {
+			  // reflect game grid
+			  var reflectedGame = reflectGrid(gameGrid);
+			  // shift left
+			  reflectedGame = shiftGameLeft(reflectedGame);
+			  // reflect back
+			  return reflectGrid(reflectedGame);
+			}
+			
+			function shiftGameLeft(gameGrid) {
+			  var newGameState = [];
+			  var totalAdd = 0;
+			  // for rows
+			  for (var i = 0; i < size; i++) {
+			    // for columns
+			    var firstPos = 4 * i;
+			    var lastPos = size + 4 * i;
+			    var currentRow = gameGrid.slice(firstPos, lastPos);
+			    var filteredRow = currentRow.filter(function (row) {
+			      return row;
+			    });
+			    for (var _iterator3 = filteredRow, _isArray3 = Array.isArray(_iterator3), _i3 = 0, _iterator3 = _isArray3 ? _iterator3 : _iterator3[Symbol.iterator]();;) {
+			      var _ref3;
+			
+			      if (_isArray3) {
+			        if (_i3 >= _iterator3.length) break;
+			        _ref3 = _iterator3[_i3++];
+			      } else {
+			        _i3 = _iterator3.next();
+			        if (_i3.done) break;
+			        _ref3 = _i3.value;
+			      }
+			
+			      var row = _ref3;
+			
+			      delete row.mergedIds;
+			    }
+			
+			    for (var j = 0; j < filteredRow.length - 1; j++) {
+			      if (filteredRow[j].value === filteredRow[j + 1].value) {
+			        var sum = filteredRow[j].value * 2;
+			        filteredRow[j] = {
+			          id: nextId++,
+			          mergedIds: [filteredRow[j].id, filteredRow[j + 1].id],
+			          value: sum
+			        };
+			        filteredRow.splice(j + 1, 1);
+			        score += sum;
+			        totalAdd += sum;
+			      }
+			    }
+			    while (filteredRow.length < size) {
+			      filteredRow.push(null);
+			    };
+			    newGameState = [].concat(newGameState, filteredRow);
+			  }
+			
+			  if (totalAdd > 0) {
+			    scoreDiv.innerHTML = score;
+			    addDiv.innerHTML = '+' + totalAdd;
+			    addDiv.classList.add('active');
+			    setTimeout(function () {
+			      addDiv.classList.remove("active");
+			    }, 800);
+			    if (score > bestScore) {
+			      localStorage.setItem('bestScore', score);
+			      initBestScore();
+			    }
+			  }
+			  return newGameState;
+			}
+			
+			function shiftGameUp(gameGrid) {
+			  var rotatedGame = rotateLeft90Deg(gameGrid);
+			  rotatedGame = shiftGameLeft(rotatedGame);
+			  return rotateRight90Deg(rotatedGame);
+			}
+			
+			function shiftGameDown(gameGrid) {
+			  var rotatedGame = rotateRight90Deg(gameGrid);
+			  rotatedGame = shiftGameLeft(rotatedGame);
+			  return rotateLeft90Deg(rotatedGame);
+			}
+			
+			var buttons = document.querySelectorAll(".js-restart-btn");
+			var length = buttons.length;
+			for (var i = 0; i < length; i++) {
+			  if (document.addEventListener) {
+			    buttons[i].addEventListener("click", function () {
+			      newGameStart();
+			    });
+			  } else {
+			    buttons[i].attachEvent("onclick", function () {
+			      newGameStart();
+			    });
+			  };
+			};
+			
+			document.addEventListener("keydown", handleKeypress);
+			document.addEventListener('touchstart', handleTouchStart, false);
+			document.addEventListener('touchmove', handleTouchMove, false);
+			
+			var xDown = null;
+			var yDown = null;
+			
+			function handleTouchStart(evt) {
+			  xDown = evt.touches[0].clientX;
+			  yDown = evt.touches[0].clientY;
+			};
+			
+			function handleTouchMove(evt) {
+			  var prevGame = [].concat(game);
+			  if (!xDown || !yDown) {
+			    return;
+			  }
+			  var xUp = evt.touches[0].clientX;
+			  var yUp = evt.touches[0].clientY;
+			
+			  var xDiff = xDown - xUp;
+			  var yDiff = yDown - yUp;
+			
+			  if (Math.abs(xDiff) > Math.abs(yDiff)) {
+			    if (xDiff > 0) {
+			      game = shiftGameLeft(game);
+			    } else {
+			      game = shiftGameRight(game);
+			    }
+			  } else {
+			    if (yDiff > 0) {
+			      game = shiftGameUp(game);
+			    } else {
+			      game = shiftGameDown(game);
+			    }
+			  }
+			  game = game.map(function (tile, index) {
+			    if (tile) {
+			      return _extends({}, tile, {
+			        index: index
+			      });
+			    } else {
+			      return null;
+			    }
+			  });
+			  addRandomNumber();
+			  updateDOM(prevGame, game);
+			  if (gameOver()) {
+			    setTimeout(function () {
+			      endDiv.classList.add('active');
+			    }, 800);
+			    return;
+			  }
+			  xDown = null;
+			  yDown = null;
+			};
+			
+			function handleKeypress(evt) {
+			  var modifiers = event.altKey || event.ctrlKey || event.metaKey || event.shiftKey;
+			  var whichKey = event.which;
+			
+			  var prevGame = [].concat(game);
+			
+			  if (!modifiers) {
+			    event.preventDefault();
+			    switch (whichKey) {
+			      case 37:
+			        game = shiftGameLeft(game);
+			        break;
+			      case 38:
+			        game = shiftGameUp(game);
+			        break;
+			      case 39:
+			        game = shiftGameRight(game);
+			        break;
+			      case 40:
+			        game = shiftGameDown(game);
+			        break;
+			    }
+			    game = game.map(function (tile, index) {
+			      if (tile) {
+			        return _extends({}, tile, {
+			          index: index
+			        });
+			      } else {
+			        return null;
+			      }
+			    });
+			    addRandomNumber();
+			    updateDOM(prevGame, game);
+			    if (gameOver()) {
+			      setTimeout(function () {
+			        endDiv.classList.add('active');
+			      }, 800);
+			      return;
+			    }
+			  }
+			}
+			
+			function newGameStart() {
+			  document.getElementById('tile-container').innerHTML = '';
+			  endDiv.classList.remove('active');
+			  score = 0;
+			  scoreDiv.innerHTML = score;
+			  initGame();
+			  drawBackground();
+			  var previousGame = [].concat(game);
+			  addRandomNumber();
+			  addRandomNumber();
+			  updateDOM(previousGame, game);
+			}
+			
+			newGameStart();
+		</script>
+		
+	</body>
+</html>
+
+        </section>
+
+        
+            <div class="pagination__title">
+                <span class="pagination__title-h" style="font-size: 18px;"> <font size="3px">💬评论</font></span>
+                <hr>
+            </div>
+            <div id="tcomment"></div>
+            <script src="https://cdn.bootcdn.net/ajax/libs/twikoo/1.6.27/twikoo.all.min.js"></script>
+            <script>
+            twikoo.init({
+              envId: 'https://siguoyi.togu.top/.netlify/functions/twikoo', // 腾讯云环境填 envId；Vercel 环境填地址（https://xxx.vercel.app）
+              el: '#tcomment', // 容器元素
+              // region: 'ap-guangzhou', // 环境地域，默认为 ap-shanghai，腾讯云环境填 ap-shanghai 或 ap-guangzhou；Vercel 环境不填
+              // path: location.pathname, // 用于区分不同文章的自定义 js 路径，如果您的文章路径不是 location.pathname，需传此参数
+              // lang: 'zh-CN', // 用于手动设定评论区语言，支持的语言列表 https://github.com/twikoojs/twikoo/blob/main/src/client/utils/i18n/index.js
+            })
+            </script>
+        
+
+    </article>
+</div>
+
+            </div>
+            <footer id="footer" class="footer">
+    <div class="copyright">
+        <span>© 果果 | Made by <a href="https://guaxichi.github.io/" target="_blank">🍉</a></span>
+    </div>
+</footer>
+
+    </div>
+<script>!function(){"use strict";function r(e){var t=e.getAttribute("data-original"),n=new Image;n.onload=function(){e.setAttribute("src",t),e.style.paddingTop=""},n.src=t}document.addEventListener("DOMContentLoaded",function(){var t,e,n,i=Array.prototype.slice.call(document.querySelectorAll("img[data-original]"));i.length&&("undefined"!=typeof IntersectionObserver?(t=new IntersectionObserver(function(e,t){e.filter(function(e){return e.isIntersecting}).forEach(function(e){r(e.target),t.unobserve(e.target)})}),i.forEach(function(e){t.observe(e)})):(n=function(){clearTimeout(e),e=setTimeout(function(){(i=i.filter(function(e){return!e.src})).length?i.filter(function(e){e.getBoundingClientRect().top<window.innerHeight&&r(e)}):(window.removeEventListener("scroll",n),window.removeEventListener("resize",n))},100)},window.addEventListener("scroll",n),window.addEventListener("resize",n),n()))},!1)}();</script></body>
+
+    <script>
+        // this function is used to check current theme before page loaded.
+        (() => {
+            const currentTheme = window.localStorage && window.localStorage.getItem('theme') || '';
+            const isDark = currentTheme === 'dark';
+            const pagebody = document.getElementsByTagName('body')[0]
+            if (isDark) {
+                pagebody.classList.add('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· 🌙"
+            } else {
+                pagebody.classList.remove('dark-theme');
+                // mobile
+                document.getElementById("mobile-toggle-theme").innerText = "· 🌕"
+            }
+        })();
+    </script>
+
+    <div id="u-search">
+    <div class="modal">
+        <div class="modal-header">
+            <div class="container">
+                <form id="u-search-modal-form" class="u-search-modal-form">
+                    <button type="submit" class="form-submit-btn">
+                        <img src="/image/search.png" class="search-btn-img" />
+                    </button>
+                    <input placeholder="搜索内容..." class="form-input" id="modal-form-input">
+                </form>
+                <a class="modal-close">x</a>
+            </div>
+            <div class="search-loading">
+                <div class="search-loading-bar"></div>
+            </div>
+        </div>
+        <div class="modal-body">
+        </div>
+    </div>
+    <div class="modal-overlay"></div>
+</div>
+
+
+</html>
