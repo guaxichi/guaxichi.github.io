@@ -1325,7 +1325,7 @@ header label {
   padding-bottom: 0.3em;
 }
 .post-content h1::before {
-  content: "";
+  content: "#";
   margin-right: 5px;
   color: #274e13;
 }
@@ -1333,7 +1333,7 @@ header label {
   color: #eee;
 }
 .post-content h2::before {
-  content: "";
+  content: "#";
   margin-right: 5px;
   color: #274e13;
 }
